@@ -19,21 +19,7 @@
       只读，可以完整地预览项目的初始效果
     </details>
   </li>
-  <li>
-    <details>
-      <summary>
-        <a href="https://vue3-antd-admin.vercel.app/" target="_blank">
-        https://vue3-antd-admin.vercel.app/
-        </a>（墙外）
-      </summary>
-      <ul>
-        <li>
-        可随意 CRUD，所以你看到的数据可能已经被其他人修改过，而非项目得初始效果，并且数据库的数据会在每天凌晨 4.30 分重置一次。
-        </li>
-        <li>由于是白嫖的国外服务器资源，所以不保熟， 并可能还需要翻墙浏览。</li>
-      </ul>
-    </details>
-  </li>
+
   <li>
    <a href="https://nest-admin.buqiyuan.top/api-docs/" target="_blank">
       Swagger 文档
@@ -52,7 +38,6 @@
 ## 环境要求
 
 - `nodejs` `20`+
-- `docker` `20.x`+ ，其中 `docker compose`版本需要 `2.17.0`+
 - `mysql` `8.x`+
 - 使用 [`pnpm`](https://pnpm.io/zh/) 包管理器安装项目依赖
 
@@ -70,56 +55,12 @@
 | :-------: | :----: | :--------: |
 | admin | a123456 | 超级管理员 |
 
-## 快速体验
-
-启动成功后，通过 <http://localhost:7001/api-docs/> 访问。
-
-```bash
-pnpm docker:up
-# or
-docker compose --env-file .env --env-file .env.production up -d --no-build
-```
-
-停止并删除所有容器
-
-```bash
-pnpm docker:down
-# or
-docker compose --env-file .env --env-file .env.production down
-```
-
-删除镜像
-
-```bash
-pnpm docker:rmi
-# or
-docker rmi buqiyuan/nest-admin-server:stable
-```
-
-查看实时日志输出
-
-```bash
-pnpm docker:logs
-# or
-docker compose --env-file .env --env-file .env.production logs -f
-
-```
-
 ## 本地开发
 
 - 获取项目代码
 
 ```bash
 git clone https://github.com/buqiyuan/nest-admin
-```
-
-- 【可选】如果你是新手，还不太会搭建`mysql/redis`，你可以使用 `Docker` 启动指定服务供本地开发时使用, 例如：
-
-```bash
-# 启动MySql服务
-docker compose --env-file .env --env-file .env.development run -d --service-ports mysql
-# 启动Redis服务
-docker compose --env-file .env --env-file .env.development run -d --service-ports redis
 ```
 
 - 安装依赖

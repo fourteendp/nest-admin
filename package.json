@@ -34,14 +34,7 @@
     "migration:generate": "npm run typeorm migration:generate ./src/migrations/update-table_$(echo $npm_package_version | sed 's/\\./_/g')",
     "migration:run": "npm run typeorm -- migration:run",
     "migration:revert": "npm run typeorm -- migration:revert",
-    "cleanlog": "rimraf logs",
-    "docker:build:dev": "docker compose --env-file .env --env-file .env.development up --build",
-    "docker:build": "docker compose --env-file .env --env-file .env.production up --build",
-    "docker:prod:up": "docker compose -f docker-compose.prod.yml --env-file .env --env-file .env.production up -d --pull=always",
-    "docker:up": "docker compose --env-file .env --env-file .env.production up -d --no-build",
-    "docker:down": "docker compose --env-file .env --env-file .env.production down",
-    "docker:rmi": "docker compose --env-file .env --env-file .env.production stop nest-admin-server && docker container rm nest-admin-server && docker rmi nest-admin-server",
-    "docker:logs": "docker compose --env-file .env --env-file .env.production logs -f"
+    "cleanlog": "rimraf logs"
   },
   "dependencies": {
     "@fastify/cookie": "^11.0.2",
