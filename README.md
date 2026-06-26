@@ -2,7 +2,7 @@
 
 ![](https://img.shields.io/github/commit-activity/m/buqiyuan/nest-admin) ![](https://img.shields.io/github/license/buqiyuan/nest-admin) ![](https://img.shields.io/github/repo-size/buqiyuan/nest-admin) ![](https://img.shields.io/github/languages/top/buqiyuan/nest-admin)
 
-**基于 NestJs + TypeScript + TypeORM + Redis + MySql + Vue3 + Ant Design Vue 编写的一款简单高效的前后端分离的权限管理系统。希望这个项目在全栈的路上能够帮助到你。**
+**基于 NestJs + TypeScript + TypeORM + Redis + PostgreSQL + Vue3 + Ant Design Vue 编写的一款简单高效的前后端分离的权限管理系统。希望这个项目在全栈的路上能够帮助到你。**
 
 - 前端项目地址：[传送门](https://github.com/buqiyuan/vue3-antdv-admin)
 
@@ -30,7 +30,7 @@
 ## 项目启动前的准备工作
 
 - sql 文件：[/deploy/sql/nest_admin.sql](https://github.com/buqiyuan/nest-admin/tree/main/deploy/sql/nest_admin.sql) 用于数据库初始化
-- 项目相关配置，如：配置 mysql 和 redis 连接
+- 项目相关配置，如：配置 postgresql 和 redis 连接
   - 公共配置: [.env](https://github.com/buqiyuan/nest-admin/blob/main/.env)
   - 开发环境: [.env.development](https://github.com/buqiyuan/nest-admin/blob/main/.env.development)
   - 生产环境: [.env.production](https://github.com/buqiyuan/nest-admin/blob/main/.env.production)
@@ -38,7 +38,7 @@
 ## 环境要求
 
 - `nodejs` `20`+
-- `mysql` `8.x`+
+- `postgresql` `14`+
 - 使用 [`pnpm`](https://pnpm.io/zh/) 包管理器安装项目依赖
 
 演示环境账号密码：
