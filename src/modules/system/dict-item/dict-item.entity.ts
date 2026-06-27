@@ -11,11 +11,11 @@ export class DictItemEntity extends CompleteEntity {
   @JoinColumn({ name: 'type_id' })
   type: DictTypeEntity
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'varchar', length: 50, default: '' })
   @ApiProperty({ description: '字典项键名' })
   label: string
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'varchar', length: 50, default: '' })
   @ApiProperty({ description: '字典项值' })
   value: string
 

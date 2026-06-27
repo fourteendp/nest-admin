@@ -5,7 +5,7 @@ import { CommonEntity } from '~/common/entity/common.entity'
 
 @Entity({ name: 'tool_storage' })
 export class Storage extends CommonEntity {
-  @Column({ type: 'varchar', length: 200, comment: '文件名' })
+  @Column({ type: 'varchar', length: 200, comment: '文件名', default: '' })
   @ApiProperty({ description: '文件名' })
   name: string
 
@@ -22,7 +22,7 @@ export class Storage extends CommonEntity {
   @ApiProperty({ description: '扩展名' })
   extName: string
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', default: '' })
   @ApiProperty({ description: '文件类型' })
   path: string
 

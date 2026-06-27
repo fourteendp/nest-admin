@@ -19,14 +19,14 @@ import { RoleEntity } from '~/modules/system/role/role.entity'
 
 @Entity({ name: 'sys_user' })
 export class UserEntity extends CommonEntity {
-  @Column({ unique: true })
+  @Column({ unique: true, nullable: true })
   username: string
 
   @Exclude()
-  @Column()
+  @Column({ default: '' })
   password: string
 
-  @Column({ length: 32 })
+  @Column({ length: 32, default: '' })
   psalt: string
 
   @Column({ nullable: true })

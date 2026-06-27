@@ -9,7 +9,7 @@ export class MenuEntity extends CompleteEntity {
   @Column({ name: 'parent_id', nullable: true })
   parentId: number
 
-  @Column()
+  @Column({ default: '' })
   name: string
 
   @Column({ nullable: true })

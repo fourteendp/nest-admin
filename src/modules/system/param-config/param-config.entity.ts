@@ -5,11 +5,11 @@ import { CommonEntity } from '~/common/entity/common.entity'
 
 @Entity({ name: 'sys_config' })
 export class ParamConfigEntity extends CommonEntity {
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'varchar', length: 50, default: '' })
   @ApiProperty({ description: '配置名' })
   name: string
 
-  @Column({ type: 'varchar', length: 50, unique: true })
+  @Column({ type: 'varchar', length: 50, unique: true, nullable: true })
   @ApiProperty({ description: '配置键名' })
   key: string
 
