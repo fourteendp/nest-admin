@@ -8,15 +8,11 @@ import { ResOp, TreeResult } from './common/model/response.model'
 import { ConfigKeyPaths, IAppConfig, ISwaggerConfig } from './config'
 import { Pagination } from './helper/paginate/pagination'
 
-export function setupSwagger(
-  app: INestApplication,
-  configService: ConfigService<ConfigKeyPaths>,
-) {
+export function setupSwagger(app: INestApplication, configService: ConfigService<ConfigKeyPaths>) {
   const { name, globalPrefix } = configService.get<IAppConfig>('app')!
   const { enable, path, serverUrl } = configService.get<ISwaggerConfig>('swagger')!
 
-  if (!enable)
-    return
+  if (!enable) return
 
   const swaggerPath = `${serverUrl}/${path}`
 
@@ -52,7 +48,7 @@ export function setupSwagger(
   })
 
   return () => {
-  // started log
+    // started log
     const logger = new Logger('SwaggerModule')
     logger.log(`Swagger UI: ${swaggerPath}`)
     logger.log(`Swagger JSON: ${swaggerPath}/json`)

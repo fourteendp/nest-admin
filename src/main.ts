@@ -2,12 +2,7 @@ import type { ConfigKeyPaths } from './config'
 import cluster from 'node:cluster'
 
 import path from 'node:path'
-import {
-  HttpStatus,
-  Logger,
-  UnprocessableEntityException,
-  ValidationPipe,
-} from '@nestjs/common'
+import { HttpStatus, Logger, UnprocessableEntityException, ValidationPipe } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { NestFactory } from '@nestjs/core'
 
@@ -26,15 +21,11 @@ import { LoggerService } from './shared/logger/logger.service'
 declare const module: any
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestFastifyApplication>(
-    AppModule,
-    fastifyApp,
-    {
-      bufferLogs: true,
-      snapshot: true,
-      // forceCloseConnections: true,
-    },
-  )
+  const app = await NestFactory.create<NestFastifyApplication>(AppModule, fastifyApp, {
+    bufferLogs: true,
+    snapshot: true,
+    // forceCloseConnections: true,
+  })
 
   const configService = app.get(ConfigService<ConfigKeyPaths>)
 
@@ -68,7 +59,7 @@ async function bootstrap() {
       // forbidNonWhitelisted: true, // 禁止 无装饰器验证的数据通过
       errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
       stopAtFirstError: true,
-      exceptionFactory: errors =>
+      exceptionFactory: (errors) =>
         new UnprocessableEntityException(
           errors.map((e) => {
             const rule = Object.keys(e.constraints!)[0]
@@ -90,8 +81,7 @@ async function bootstrap() {
     const env = cluster.isPrimary
     const prefix = env ? 'P' : 'W'
 
-    if (!isMainProcess)
-      return
+    if (!isMainProcess) return
 
     printSwaggerLog?.()
 

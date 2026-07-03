@@ -17,10 +17,7 @@ export class NetDiskOverviewService {
     @Inject(OssConfig.KEY) private qiniuConfig: IOssConfig,
     private readonly httpService: HttpService,
   ) {
-    this.mac = new qiniu.auth.digest.Mac(
-      this.qiniuConfig.accessKey,
-      this.qiniuConfig.secretKey,
-    )
+    this.mac = new qiniu.auth.digest.Mac(this.qiniuConfig.accessKey, this.qiniuConfig.secretKey)
   }
 
   /** 获取格式化后的起始和结束时间 */
@@ -38,7 +35,10 @@ export class NetDiskOverviewService {
       [bucketKey]: this.qiniuConfig.bucket,
       g: 'day',
     }
-    const searchParams = new URLSearchParams({ ...defaultParams, ...queryParams })
+    const searchParams = new URLSearchParams({
+      ...defaultParams,
+      ...queryParams,
+    })
     return decodeURIComponent(`${OSS_API}/v6/${type}?${searchParams}`)
   }
 
@@ -53,7 +53,7 @@ export class NetDiskOverviewService {
     return this.httpService.axiosRef.get(url, {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': `${accessToken}`,
+        Authorization: `${accessToken}`,
       },
     })
   }
@@ -116,7 +116,13 @@ export class NetDiskOverviewService {
    */
   async getFlow(beginDate: Date, endDate = new Date()): Promise<FlowInfo> {
     const [begin, end] = this.getStartAndEndDate(beginDate, endDate)
-    const url = this.getStatisticUrl('blob_io', { begin, end, $ftype: 0, $src: 'origin', select: 'flow' })
+    const url = this.getStatisticUrl('blob_io', {
+      begin,
+      end,
+      $ftype: 0,
+      $src: 'origin',
+      select: 'flow',
+    })
     const { data } = await this.getStatisticData(url)
     const times = []
     const datas = []
@@ -137,7 +143,13 @@ export class NetDiskOverviewService {
    */
   async getHit(beginDate: Date, endDate = new Date()): Promise<HitInfo> {
     const [begin, end] = this.getStartAndEndDate(beginDate, endDate)
-    const url = this.getStatisticUrl('blob_io', { begin, end, $ftype: 0, $src: 'inner', select: 'hit' })
+    const url = this.getStatisticUrl('blob_io', {
+      begin,
+      end,
+      $ftype: 0,
+      $src: 'inner',
+      select: 'hit',
+    })
     const { data } = await this.getStatisticData(url)
     const times = []
     const datas = []

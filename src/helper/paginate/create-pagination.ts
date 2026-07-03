@@ -12,8 +12,7 @@ export function createPaginationObject<T>({
   currentPage: number
   limit: number
 }): Pagination<T> {
-  const totalPages
-    = totalItems !== undefined ? Math.ceil(totalItems / limit) : undefined
+  const totalPages = totalItems !== undefined ? Math.ceil(totalItems / limit) : undefined
 
   const meta: IPaginationMeta = {
     totalItems,

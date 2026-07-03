@@ -4,12 +4,12 @@ import { isPlainObject } from 'lodash'
 
 import { PERMISSION_KEY } from '../auth.constant'
 
- type TupleToObject<T extends string, P extends ReadonlyArray<string>> = {
-   [K in Uppercase<P[number]>]: `${T}:${Lowercase<K>}`
- }
- type AddPrefixToObjectValue<T extends string, P extends Record<string, string>> = {
-   [K in keyof P]: K extends string ? `${T}:${P[K]}` : never
- }
+type TupleToObject<T extends string, P extends ReadonlyArray<string>> = {
+  [K in Uppercase<P[number]>]: `${T}:${Lowercase<K>}`
+}
+type AddPrefixToObjectValue<T extends string, P extends Record<string, string>> = {
+  [K in keyof P]: K extends string ? `${T}:${P[K]}` : never
+}
 
 /** 资源操作需要特定的权限 */
 export function Perm(permission: string | string[]) {
@@ -33,8 +33,14 @@ let permissions: string[] = []
  * definePermission('app:health', ['network']);
  * ```
  */
-export function definePermission<T extends string, U extends Record<string, string>>(modulePrefix: T, actionMap: U): AddPrefixToObjectValue<T, U>
-export function definePermission<T extends string, U extends ReadonlyArray<string>>(modulePrefix: T, actions: U): TupleToObject<T, U>
+export function definePermission<T extends string, U extends Record<string, string>>(
+  modulePrefix: T,
+  actionMap: U,
+): AddPrefixToObjectValue<T, U>
+export function definePermission<T extends string, U extends ReadonlyArray<string>>(
+  modulePrefix: T,
+  actions: U,
+): TupleToObject<T, U>
 export function definePermission(modulePrefix: string, actions) {
   if (isPlainObject(actions)) {
     Object.entries(actions).forEach(([key, action]) => {
@@ -42,9 +48,8 @@ export function definePermission(modulePrefix: string, actions) {
     })
     permissions = [...new Set([...permissions, ...Object.values<string>(actions)])]
     return actions
-  }
-  else if (Array.isArray(actions)) {
-    const permissionFormats = actions.map(action => `${modulePrefix}:${action}`)
+  } else if (Array.isArray(actions)) {
+    const permissionFormats = actions.map((action) => `${modulePrefix}:${action}`)
     permissions = [...new Set([...permissions, ...permissionFormats])]
 
     return actions.reduce((prev, action) => {

@@ -1,4 +1,4 @@
-const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
 export function scheduleMicrotask(callback: () => void) {
   sleep(0).then(callback)
@@ -39,11 +39,9 @@ export function createNotifyManager() {
     transactions++
     try {
       result = callback()
-    }
-    finally {
+    } finally {
       transactions--
-      if (!transactions)
-        flush()
+      if (!transactions) flush()
     }
     return result
   }
@@ -51,8 +49,7 @@ export function createNotifyManager() {
   const schedule = (callback: NotifyCallback): void => {
     if (transactions) {
       queue.push(callback)
-    }
-    else {
+    } else {
       scheduleMicrotask(() => {
         notifyFn(callback)
       })

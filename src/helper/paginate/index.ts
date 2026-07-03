@@ -13,9 +13,7 @@ import { Pagination } from './pagination'
 const DEFAULT_LIMIT = 10
 const DEFAULT_PAGE = 1
 
-function resolveOptions(
-  options: IPaginationOptions,
-): [number, number, PaginationTypeEnum] {
+function resolveOptions(options: IPaginationOptions): [number, number, PaginationTypeEnum] {
   const { page, pageSize, paginationType } = options
 
   return [
@@ -59,8 +57,7 @@ async function paginateQueryBuilder<T>(
 
   if (paginationType === PaginationTypeEnum.TAKE_AND_SKIP)
     queryBuilder.take(limit).skip((page - 1) * limit)
-  else
-    queryBuilder.limit(limit).offset((page - 1) * limit)
+  else queryBuilder.limit(limit).offset((page - 1) * limit)
 
   const [items, total] = await queryBuilder.getManyAndCount()
 
@@ -102,10 +99,7 @@ export async function paginateRawAndEntities<T>(
 ): Promise<[Pagination<T>, Partial<T>[]]> {
   const [page, limit, paginationType] = resolveOptions(options)
 
-  const promises: [
-    Promise<{ entities: T[], raw: T[] }>,
-    Promise<number> | undefined,
-  ] = [
+  const promises: [Promise<{ entities: T[]; raw: T[] }>, Promise<number> | undefined] = [
     (paginationType === PaginationTypeEnum.LIMIT_AND_OFFSET
       ? queryBuilder.limit(limit).offset((page - 1) * limit)
       : queryBuilder.take(limit).skip((page - 1) * limit)

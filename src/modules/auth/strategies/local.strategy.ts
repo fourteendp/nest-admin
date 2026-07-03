@@ -6,10 +6,7 @@ import { AuthStrategy } from '../auth.constant'
 import { AuthService } from '../auth.service'
 
 @Injectable()
-export class LocalStrategy extends PassportStrategy(
-  Strategy,
-  AuthStrategy.LOCAL,
-) {
+export class LocalStrategy extends PassportStrategy(Strategy, AuthStrategy.LOCAL) {
   constructor(private authService: AuthService) {
     super({
       usernameField: 'credential',

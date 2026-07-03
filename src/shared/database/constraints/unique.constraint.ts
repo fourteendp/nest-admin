@@ -24,7 +24,10 @@ interface Condition {
 @ValidatorConstraint({ name: 'entityItemUnique', async: true })
 @Injectable()
 export class UniqueConstraint implements ValidatorConstraintInterface {
-  constructor(private dataSource: DataSource, private readonly cls: ClsService) {}
+  constructor(
+    private dataSource: DataSource,
+    private readonly cls: ClsService,
+  ) {}
 
   async validate(value: any, args: ValidationArguments) {
     // 获取要验证的模型和字段
@@ -39,8 +42,7 @@ export class UniqueConstraint implements ValidatorConstraintInterface {
           entity: args.constraints[0],
         }) as unknown as Required<Condition>
 
-    if (!condition.entity)
-      return false
+    if (!condition.entity) return false
 
     try {
       // 查询是否存在数据,如果已经存在则验证失败
@@ -48,7 +50,7 @@ export class UniqueConstraint implements ValidatorConstraintInterface {
 
       // 如果没有传自定义的错误信息，则尝试获取该字段的 comment 作为信息提示
       if (!condition.message) {
-        const targetColumn = repo.metadata.columns.find(n => n.propertyName === condition.field)
+        const targetColumn = repo.metadata.columns.find((n) => n.propertyName === condition.field)
         if (targetColumn?.comment) {
           args.constraints[0].message = `已存在相同的${targetColumn.comment}`
         }
@@ -66,8 +68,7 @@ export class UniqueConstraint implements ValidatorConstraintInterface {
           where: { [condition.field]: value, ...andWhere },
         }),
       )
-    }
-    catch (err) {
+    } catch (err) {
       // 如果数据库操作异常则验证失败
       return false
     }
@@ -79,8 +80,7 @@ export class UniqueConstraint implements ValidatorConstraintInterface {
     // if (!(args.object as any).getManager)
     //   return 'getManager function not been found!'
 
-    if (!entity)
-      return 'Model not been specified!'
+    if (!entity) return 'Model not been specified!'
 
     if (message) {
       return message
@@ -106,10 +106,7 @@ function IsUnique(
   validationOptions?: ValidationOptions,
 ): (object: Record<string, any>, propertyName: string) => void
 
-function IsUnique(
-  params: ObjectType<any> | Condition,
-  validationOptions?: ValidationOptions,
-) {
+function IsUnique(params: ObjectType<any> | Condition, validationOptions?: ValidationOptions) {
   return (object: Record<string, any>, propertyName: string) => {
     registerDecorator({
       target: object.constructor,

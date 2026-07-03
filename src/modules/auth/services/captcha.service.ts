@@ -29,12 +29,7 @@ export class CaptchaService {
     await this.redis.del(genCaptchaImgKey(id))
   }
 
-  async log(
-    account: string,
-    code: string,
-    provider: 'sms' | 'email',
-    uid?: number,
-  ): Promise<void> {
+  async log(account: string, code: string, provider: 'sms' | 'email', uid?: number): Promise<void> {
     await this.captchaLogService.create(account, code, provider, uid)
   }
 }

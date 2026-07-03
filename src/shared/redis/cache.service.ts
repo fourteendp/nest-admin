@@ -43,8 +43,7 @@ export class CacheService {
   private _emitter: Emitter
 
   public get emitter(): Emitter {
-    if (this._emitter)
-      return this._emitter
+    if (this._emitter) return this._emitter
 
     this._emitter = new Emitter(this.redisClient, {
       key: RedisIoAdapterKey,
@@ -56,13 +55,13 @@ export class CacheService {
   public async cleanCatch() {
     const redis = this.getClient()
     const keys: string[] = await redis.keys(`${API_CACHE_PREFIX}*`)
-    await Promise.all(keys.map(key => redis.del(key)))
+    await Promise.all(keys.map((key) => redis.del(key)))
   }
 
   public async cleanAllRedisKey() {
     const redis = this.getClient()
     const keys: string[] = await redis.keys(getRedisKey('*'))
 
-    await Promise.all(keys.map(key => redis.del(key)))
+    await Promise.all(keys.map((key) => redis.del(key)))
   }
 }

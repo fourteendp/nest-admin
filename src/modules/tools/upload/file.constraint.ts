@@ -8,21 +8,13 @@ import {
 } from 'class-validator'
 import { has, isArray } from 'lodash'
 
-type FileLimit = Pick<
-  FastifyMultipartBaseOptions['limits'],
-  'fileSize' | 'files'
-> & {
+type FileLimit = Pick<FastifyMultipartBaseOptions['limits'], 'fileSize' | 'files'> & {
   mimetypes?: string[]
 }
 function checkFileAndLimit(file: MultipartFile, limits: FileLimit = {}) {
-  if (!('mimetype' in file))
-    return false
-  if (limits.mimetypes && !limits.mimetypes.includes(file.mimetype))
-    return false
-  if (
-    has(file, '_buf')
-    && Buffer.byteLength((file as any)._buf) > limits.fileSize
-  ) {
+  if (!('mimetype' in file)) return false
+  if (limits.mimetypes && !limits.mimetypes.includes(file.mimetype)) return false
+  if (has(file, '_buf') && Buffer.byteLength((file as any)._buf) > limits.fileSize) {
     return false
   }
   return true
@@ -34,8 +26,7 @@ export class FileConstraint implements ValidatorConstraintInterface {
     const [limits = {}] = args.constraints
     const values = (args.object as any)[args.property]
     const filesLimit = (limits as FileLimit).files ?? 0
-    if (filesLimit > 0 && isArray(values) && values.length > filesLimit)
-      return false
+    if (filesLimit > 0 && isArray(values) && values.length > filesLimit) return false
     return checkFileAndLimit(value, limits)
   }
 
@@ -49,10 +40,7 @@ export class FileConstraint implements ValidatorConstraintInterface {
  * @param limits 限制选项
  * @param validationOptions class-validator选项
  */
-export function IsFile(
-  limits?: FileLimit,
-  validationOptions?: ValidationOptions,
-) {
+export function IsFile(limits?: FileLimit, validationOptions?: ValidationOptions) {
   return (object: Record<string, any>, propertyName: string) => {
     registerDecorator({
       target: object.constructor,

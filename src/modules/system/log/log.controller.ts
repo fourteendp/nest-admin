@@ -6,11 +6,7 @@ import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
 import { Pagination } from '~/helper/paginate/pagination'
 import { definePermission, Perm } from '~/modules/auth/decorators/permission.decorator'
 
-import {
-  CaptchaLogQueryDto,
-  LoginLogQueryDto,
-  TaskLogQueryDto,
-} from './dto/log.dto'
+import { CaptchaLogQueryDto, LoginLogQueryDto, TaskLogQueryDto } from './dto/log.dto'
 import { CaptchaLogEntity } from './entities/captcha-log.entity'
 import { TaskLogEntity } from './entities/task-log.entity'
 import { LoginLogInfo } from './models/log.model'
@@ -38,9 +34,7 @@ export class LogController {
   @ApiOperation({ summary: '查询登录日志列表' })
   @ApiResult({ type: [LoginLogInfo], isPage: true })
   @Perm(permissions.TaskList)
-  async loginLogPage(
-    @Query() dto: LoginLogQueryDto,
-  ): Promise<Pagination<LoginLogInfo>> {
+  async loginLogPage(@Query() dto: LoginLogQueryDto): Promise<Pagination<LoginLogInfo>> {
     return this.loginLogService.list(dto)
   }
 
@@ -56,9 +50,7 @@ export class LogController {
   @ApiOperation({ summary: '查询验证码日志列表' })
   @ApiResult({ type: [CaptchaLogEntity], isPage: true })
   @Perm(permissions.CaptchaList)
-  async captchaList(
-    @Query() dto: CaptchaLogQueryDto,
-  ): Promise<Pagination<CaptchaLogEntity>> {
+  async captchaList(@Query() dto: CaptchaLogQueryDto): Promise<Pagination<CaptchaLogEntity>> {
     return this.captchaLogService.paginate(dto)
   }
 }

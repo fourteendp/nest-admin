@@ -34,12 +34,12 @@ export class AccessTokenEntity extends BaseEntity {
   @CreateDateColumn({ comment: '令牌创建时间' })
   created_at!: Date
 
-  @OneToOne(() => RefreshTokenEntity, refreshToken => refreshToken.accessToken, {
+  @OneToOne(() => RefreshTokenEntity, (refreshToken) => refreshToken.accessToken, {
     cascade: true,
   })
   refreshToken!: RefreshTokenEntity
 
-  @ManyToOne(() => UserEntity, user => user.accessTokens, {
+  @ManyToOne(() => UserEntity, (user) => user.accessTokens, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'user_id' })

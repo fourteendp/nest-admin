@@ -1,12 +1,5 @@
 import { ApiProperty, IntersectionType, PartialType } from '@nestjs/swagger'
-import {
-  IsArray,
-  IsIn,
-  IsOptional,
-  IsString,
-  Matches,
-  MinLength,
-} from 'class-validator'
+import { IsArray, IsIn, IsOptional, IsString, Matches, MinLength } from 'class-validator'
 
 import { OperatorDto } from '~/common/dto/operator.dto'
 import { PagerDto } from '~/common/dto/pager.dto'

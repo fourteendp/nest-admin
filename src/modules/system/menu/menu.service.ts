@@ -32,13 +32,7 @@ export class MenuService {
   /**
    * 获取所有菜单以及权限
    */
-  async list({
-    name,
-    path,
-    permission,
-    component,
-    status,
-  }: MenuQueryDto): Promise<MenuEntity[]> {
+  async list({ name, path, permission, component, status }: MenuQueryDto): Promise<MenuEntity[]> {
     const menus = await this.menuRepository.find({
       where: {
         ...(name && { name: Like(`%${name}%`) }),
@@ -76,13 +70,11 @@ export class MenuService {
     const roleIds = await this.roleService.getRoleIdsByUser(uid)
     let menus: MenuEntity[] = []
 
-    if (isEmpty(roleIds))
-      return generatorRouters([])
+    if (isEmpty(roleIds)) return generatorRouters([])
 
     if (this.roleService.hasAdminRole(roleIds)) {
       menus = await this.menuRepository.find({ order: { orderNo: 'ASC' } })
-    }
-    else {
+    } else {
       menus = await this.menuRepository
         .createQueryBuilder('menu')
         .innerJoinAndSelect('menu.roles', 'role')
@@ -105,14 +97,11 @@ export class MenuService {
     }
     if (dto.type === 1 && dto.parentId) {
       const parent = await this.getMenuItemInfo(dto.parentId)
-      if (isEmpty(parent))
-        throw new BusinessException(ErrorEnum.PARENT_MENU_NOT_FOUND)
+      if (isEmpty(parent)) throw new BusinessException(ErrorEnum.PARENT_MENU_NOT_FOUND)
 
       if (parent && parent.type === 1) {
         // 当前新增为菜单但父节点也为菜单时为非法操作
-        throw new BusinessException(
-          ErrorEnum.ILLEGAL_OPERATION_DIRECTORY_PARENT,
-        )
+        throw new BusinessException(ErrorEnum.ILLEGAL_OPERATION_DIRECTORY_PARENT)
       }
     }
   }
@@ -179,10 +168,8 @@ export class MenuService {
         permission: Not(IsNull()),
         type: In([1, 2]),
       })
-    }
-    else {
-      if (isEmpty(roleIds))
-        return permission
+    } else {
+      if (isEmpty(roleIds)) return permission
 
       result = await this.menuRepository
         .createQueryBuilder('menu')
@@ -194,8 +181,7 @@ export class MenuService {
     }
     if (!isEmpty(result)) {
       result.forEach((e) => {
-        if (e.permission)
-          permission = concat(permission, e.permission.split(','))
+        if (e.permission) permission = concat(permission, e.permission.split(','))
       })
       permission = uniq(permission)
     }
@@ -230,8 +216,8 @@ export class MenuService {
     const onlineUserIds: string[] = await this.redis.keys(genAuthTokenKey('*'))
     if (onlineUserIds && onlineUserIds.length > 0) {
       const promiseArr = onlineUserIds
-        .map(i => Number.parseInt(i.split(RedisKeys.AUTH_TOKEN_PREFIX)[1]))
-        .filter(i => i)
+        .map((i) => Number.parseInt(i.split(RedisKeys.AUTH_TOKEN_PREFIX)[1]))
+        .filter((i) => i)
         .map(async (uid) => {
           const perms = await this.getPermissions(uid)
           await this.redis.set(genAuthPermKey(uid), JSON.stringify(perms))
@@ -239,8 +225,7 @@ export class MenuService {
         })
       const uids = await Promise.all(promiseArr)
       console.log('refreshOnlineUserPerms')
-      if (isNoticeUser)
-        this.sseService.noticeClientToUpdateMenusByUserIds(uids)
+      if (isNoticeUser) this.sseService.noticeClientToUpdateMenusByUserIds(uids)
     }
   }
 

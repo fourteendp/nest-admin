@@ -15,17 +15,13 @@ export class TodoService {
     private todoRepository: Repository<TodoEntity>,
   ) {}
 
-  async list({
-    page,
-    pageSize,
-  }: TodoQueryDto): Promise<Pagination<TodoEntity>> {
+  async list({ page, pageSize }: TodoQueryDto): Promise<Pagination<TodoEntity>> {
     return paginate(this.todoRepository, { page, pageSize })
   }
 
   async detail(id: number): Promise<TodoEntity> {
     const item = await this.todoRepository.findOneBy({ id })
-    if (!item)
-      throw new NotFoundException('未找到该记录')
+    if (!item) throw new NotFoundException('未找到该记录')
 
     return item
   }

@@ -1,14 +1,6 @@
 import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager'
-import {
-  Controller,
-  Get,
-  UseInterceptors,
-} from '@nestjs/common'
-import {
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-} from '@nestjs/swagger'
+import { Controller, Get, UseInterceptors } from '@nestjs/common'
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { definePermission, Perm } from '~/modules/auth/decorators/permission.decorator'
 

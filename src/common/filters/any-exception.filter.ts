@@ -40,20 +40,13 @@ export class AllExceptionsFilter implements ExceptionFilter {
     let message = this.getErrorMessage(exception)
 
     // 系统内部错误时
-    if (
-      status === HttpStatus.INTERNAL_SERVER_ERROR
-      && !(exception instanceof BusinessException)
-    ) {
+    if (status === HttpStatus.INTERNAL_SERVER_ERROR && !(exception instanceof BusinessException)) {
       Logger.error(exception, undefined, 'Catch')
 
       // 生产环境下隐藏错误信息
-      if (!isDev)
-        message = ErrorEnum.SERVER_ERROR?.split(':')[1]
-    }
-    else {
-      this.logger.warn(
-        `错误信息：(${status}) ${message} Path: ${decodeURI(url)}`,
-      )
+      if (!isDev) message = ErrorEnum.SERVER_ERROR?.split(':')[1]
+    } else {
+      this.logger.warn(`错误信息：(${status}) ${message} Path: ${decodeURI(url)}`)
     }
 
     const apiErrorCode = exception instanceof BusinessException ? exception.getErrorCode() : status
@@ -71,27 +64,27 @@ export class AllExceptionsFilter implements ExceptionFilter {
   getStatus(exception: unknown): number {
     if (exception instanceof HttpException) {
       return exception.getStatus()
-    }
-    else if (exception instanceof QueryFailedError) {
+    } else if (exception instanceof QueryFailedError) {
       // console.log('driverError', exception.driverError.code)
       return HttpStatus.INTERNAL_SERVER_ERROR
-    }
-    else {
-      return (exception as myError)?.status
-        ?? (exception as myError)?.statusCode ?? HttpStatus.INTERNAL_SERVER_ERROR
+    } else {
+      return (
+        (exception as myError)?.status ??
+        (exception as myError)?.statusCode ??
+        HttpStatus.INTERNAL_SERVER_ERROR
+      )
     }
   }
 
   getErrorMessage(exception: unknown): string {
     if (exception instanceof HttpException) {
       return exception.message
-    }
-    else if (exception instanceof QueryFailedError) {
+    } else if (exception instanceof QueryFailedError) {
       return exception.message
-    }
-
-    else {
-      return (exception as any)?.response?.message ?? (exception as myError)?.message ?? `${exception}`
+    } else {
+      return (
+        (exception as any)?.response?.message ?? (exception as myError)?.message ?? `${exception}`
+      )
     }
   }
 

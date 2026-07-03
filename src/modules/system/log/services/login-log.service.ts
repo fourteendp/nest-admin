@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 
 import { Between, LessThan, Like, Repository } from 'typeorm'
 
-import {UAParser} from 'ua-parser-js'
+import { UAParser } from 'ua-parser-js'
 
 import { paginateRaw } from '~/helper/paginate'
 
@@ -32,7 +32,6 @@ export class LoginLogService {
   constructor(
     @InjectRepository(LoginLogEntity)
     private loginLogRepository: Repository<LoginLogEntity>,
-
   ) {}
 
   async create(uid: number, ip: string, ua: string): Promise<void> {
@@ -45,20 +44,12 @@ export class LoginLogService {
         address,
         user: { id: uid },
       })
-    }
-    catch (e) {
+    } catch (e) {
       console.error(e)
     }
   }
 
-  async list({
-    page,
-    pageSize,
-    username,
-    ip,
-    address,
-    time,
-  }: LoginLogQueryDto) {
+  async list({ page, pageSize, username, ip, address, time }: LoginLogQueryDto) {
     const queryBuilder = await this.loginLogRepository
       .createQueryBuilder('login_log')
       .innerJoinAndSelect('login_log.user', 'user')
@@ -80,9 +71,7 @@ export class LoginLogService {
     })
 
     const parser = new UAParser()
-    const loginLogInfos = await Promise.all(
-      items.map(item => parseLoginLog(item, parser)),
-    )
+    const loginLogInfos = await Promise.all(items.map((item) => parseLoginLog(item, parser)))
 
     return {
       items: loginLogInfos,

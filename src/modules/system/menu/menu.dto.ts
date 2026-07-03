@@ -50,11 +50,11 @@ export class MenuDto extends OperatorDto {
 
   @ApiProperty({ description: '前端路由地址' })
   // @Matches(/^[/]$/)
-  @ValidateIf(o => o.type !== MenuType.PERMISSION)
+  @ValidateIf((o) => o.type !== MenuType.PERMISSION)
   path: string
 
   @ApiProperty({ description: '是否外链', default: false })
-  @ValidateIf(o => o.type !== MenuType.PERMISSION)
+  @ValidateIf((o) => o.type !== MenuType.PERMISSION)
   @IsBoolean()
   isExt: boolean
 

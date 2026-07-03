@@ -18,7 +18,8 @@ const AuthGateway = createAuthGateway({ namespace: 'web' })
 @WebSocketGateway<GatewayMetadata>({ namespace: 'web' })
 export class WebEventsGateway
   extends AuthGateway
-  implements OnGatewayConnection, OnGatewayDisconnect {
+  implements OnGatewayConnection, OnGatewayDisconnect
+{
   constructor(
     protected readonly jwtService: JwtService,
     protected readonly tokenService: TokenService,

@@ -1,13 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Post,
-  Put,
-  Query,
-  UseGuards,
-} from '@nestjs/common'
+import { Body, Controller, Delete, Get, Post, Put, Query, UseGuards } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { ApiResult } from '~/common/decorators/api-result.decorator'
@@ -64,7 +55,7 @@ export class TodoController {
   @ApiOperation({ summary: '更新Todo' })
   @Perm(permissions.UPDATE)
   @Resource(TodoEntity)
-  async update(@IdParam() id: number, @Body()dto: TodoUpdateDto): Promise<void> {
+  async update(@IdParam() id: number, @Body() dto: TodoUpdateDto): Promise<void> {
     await this.todoService.update(id, dto)
   }
 

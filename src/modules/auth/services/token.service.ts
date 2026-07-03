@@ -36,8 +36,7 @@ export class TokenService {
     if (refreshToken) {
       const now = dayjs()
       // 判断refreshToken是否过期
-      if (now.isAfter(refreshToken.expired_at))
-        return null
+      if (now.isAfter(refreshToken.expired_at)) return null
 
       const roleIds = await this.roleService.getRoleIdsByUser(user.id)
       const roleValues = await this.roleService.getRoleValues(roleIds)
@@ -70,9 +69,7 @@ export class TokenService {
     const accessToken = new AccessTokenEntity()
     accessToken.value = jwtSign
     accessToken.user = { id: uid } as UserEntity
-    accessToken.expired_at = dayjs()
-      .add(this.securityConfig.jwtExprire, 'second')
-      .toDate()
+    accessToken.expired_at = dayjs().add(this.securityConfig.jwtExprire, 'second').toDate()
 
     await accessToken.save()
 
@@ -90,10 +87,7 @@ export class TokenService {
    * @param accessToken
    * @param now
    */
-  async generateRefreshToken(
-    accessToken: AccessTokenEntity,
-    now: dayjs.Dayjs,
-  ): Promise<string> {
+  async generateRefreshToken(accessToken: AccessTokenEntity, now: dayjs.Dayjs): Promise<string> {
     const refreshTokenPayload = {
       uuid: generateUUID(),
     }
@@ -104,9 +98,7 @@ export class TokenService {
 
     const refreshToken = new RefreshTokenEntity()
     refreshToken.value = refreshTokenSign
-    refreshToken.expired_at = now
-      .add(this.securityConfig.refreshExpire, 'second')
-      .toDate()
+    refreshToken.expired_at = now.add(this.securityConfig.refreshExpire, 'second').toDate()
     refreshToken.accessToken = accessToken
 
     await refreshToken.save()
@@ -128,8 +120,7 @@ export class TokenService {
         cache: true,
       })
       isValid = Boolean(res)
-    }
-    catch (error) {}
+    } catch (error) {}
 
     return isValid
   }
@@ -158,8 +149,7 @@ export class TokenService {
       relations: ['accessToken'],
     })
     if (refreshToken) {
-      if (refreshToken.accessToken)
-        this.redis.del(genOnlineUserKey(refreshToken.accessToken.id))
+      if (refreshToken.accessToken) this.redis.del(genOnlineUserKey(refreshToken.accessToken.id))
       await refreshToken.accessToken.remove()
       await refreshToken.remove()
     }

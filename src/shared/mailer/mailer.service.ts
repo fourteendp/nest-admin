@@ -38,18 +38,12 @@ export class MailerService {
       'EX',
       getRemainTime(),
     )
-    await this.redis.set(
-      `ip:${ip}:send:limit-count-day`,
-      ipLimitCountOfDay,
-      'EX',
-      getRemainTime(),
-    )
+    await this.redis.set(`ip:${ip}:send:limit-count-day`, ipLimitCountOfDay, 'EX', getRemainTime())
   }
 
   async checkCode(to, code) {
     const ret = await this.redis.get(`captcha:${to}`)
-    if (ret !== code)
-      throw new BusinessException(ErrorEnum.INVALID_VERIFICATION_CODE)
+    if (ret !== code) throw new BusinessException(ErrorEnum.INVALID_VERIFICATION_CODE)
 
     await this.redis.del(`captcha:${to}`)
   }
@@ -59,51 +53,35 @@ export class MailerService {
 
     // ip限制
     const ipLimit = await this.redis.get(`ip:${ip}:send:limit`)
-    if (ipLimit)
-      throw new BusinessException(ErrorEnum.TOO_MANY_REQUESTS)
+    if (ipLimit) throw new BusinessException(ErrorEnum.TOO_MANY_REQUESTS)
 
     // 1分钟最多接收1条
     const limit = await this.redis.get(`captcha:${to}:limit`)
-    if (limit)
-      throw new BusinessException(ErrorEnum.TOO_MANY_REQUESTS)
+    if (limit) throw new BusinessException(ErrorEnum.TOO_MANY_REQUESTS)
 
     // 1天一个邮箱最多接收5条
-    let limitCountOfDay: string | number = await this.redis.get(
-      `captcha:${to}:limit-day`,
-    )
+    let limitCountOfDay: string | number = await this.redis.get(`captcha:${to}:limit-day`)
     limitCountOfDay = limitCountOfDay ? Number(limitCountOfDay) : 0
     if (limitCountOfDay > LIMIT_TIME) {
-      throw new BusinessException(
-        ErrorEnum.MAXIMUM_FIVE_VERIFICATION_CODES_PER_DAY,
-      )
+      throw new BusinessException(ErrorEnum.MAXIMUM_FIVE_VERIFICATION_CODES_PER_DAY)
     }
 
     // 1天一个ip最多发送5条
-    let ipLimitCountOfDay: string | number = await this.redis.get(
-      `ip:${ip}:send:limit-day`,
-    )
+    let ipLimitCountOfDay: string | number = await this.redis.get(`ip:${ip}:send:limit-day`)
     ipLimitCountOfDay = ipLimitCountOfDay ? Number(ipLimitCountOfDay) : 0
     if (ipLimitCountOfDay > LIMIT_TIME) {
-      throw new BusinessException(
-        ErrorEnum.MAXIMUM_FIVE_VERIFICATION_CODES_PER_DAY,
-      )
+      throw new BusinessException(ErrorEnum.MAXIMUM_FIVE_VERIFICATION_CODES_PER_DAY)
     }
   }
 
-  async send(
-    to,
-    subject,
-    content: string,
-    type: 'text' | 'html' = 'text',
-  ): Promise<any> {
+  async send(to, subject, content: string, type: 'text' | 'html' = 'text'): Promise<any> {
     if (type === 'text') {
       return this.mailerService.sendMail({
         to,
         subject,
         text: content,
       })
-    }
-    else {
+    } else {
       return this.mailerService.sendMail({
         to,
         subject,
@@ -124,8 +102,7 @@ export class MailerService {
           code,
         },
       })
-    }
-    catch (error) {
+    } catch (error) {
       console.log(error)
       throw new BusinessException(ErrorEnum.VERIFICATION_CODE_SEND_FAILED)
     }

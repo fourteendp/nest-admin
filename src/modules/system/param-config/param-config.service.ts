@@ -75,8 +75,7 @@ export class ParamConfigService {
       where: { key },
       select: ['value'],
     })
-    if (result)
-      return result.value
+    if (result) return result.value
 
     return null
   }

@@ -7,10 +7,8 @@ import { ResOp } from '~/common/model/response.model'
 const baseTypeNames = ['String', 'Number', 'Boolean']
 
 function genBaseProp(type: Type<any>) {
-  if (baseTypeNames.includes(type.name))
-    return { type: type.name.toLocaleLowerCase() }
-  else
-    return { $ref: getSchemaPath(type) }
+  if (baseTypeNames.includes(type.name)) return { type: type.name.toLocaleLowerCase() }
+  else return { $ref: getSchemaPath(type) }
 }
 
 /**
@@ -48,18 +46,15 @@ export function ApiResult<TModel extends Type<any>>({
           },
         },
       }
-    }
-    else {
+    } else {
       prop = {
         type: 'array',
         items: genBaseProp(type[0]),
       }
     }
-  }
-  else if (type) {
+  } else if (type) {
     prop = genBaseProp(type)
-  }
-  else {
+  } else {
     prop = { type: 'null', default: null }
   }
 
@@ -67,11 +62,7 @@ export function ApiResult<TModel extends Type<any>>({
 
   return applyDecorators(
     ApiExtraModels(model),
-    (
-      target: object,
-      key: string | symbol,
-      descriptor: TypedPropertyDescriptor<any>,
-    ) => {
+    (target: object, key: string | symbol, descriptor: TypedPropertyDescriptor<any>) => {
       queueMicrotask(() => {
         const isPost = Reflect.getMetadata(METHOD_METADATA, descriptor.value) === RequestMethod.POST
 

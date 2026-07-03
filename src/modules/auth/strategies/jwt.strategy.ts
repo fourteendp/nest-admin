@@ -8,9 +8,7 @@ import { AuthStrategy } from '../auth.constant'
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, AuthStrategy.JWT) {
-  constructor(
-    @Inject(SecurityConfig.KEY) private securityConfig: ISecurityConfig,
-  ) {
+  constructor(@Inject(SecurityConfig.KEY) private securityConfig: ISecurityConfig) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,

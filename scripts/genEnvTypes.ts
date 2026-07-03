@@ -12,12 +12,16 @@ const envObj = targets.reduce((prev, file) => {
   return { ...prev, ...result }
 }, {})
 
-const envType = Object.entries<string>(envObj).reduce((prev, [key, value]) => {
-  return `${prev}
+const envType = Object.entries<string>(envObj)
+  .reduce((prev, [key, value]) => {
+    return `${prev}
       ${key}: '${value}';`
-}, '').trim()
+  }, '')
+  .trim()
 
-fs.writeFile(path.join(directoryPath, 'types/env.d.ts'), `
+fs.writeFile(
+  path.join(directoryPath, 'types/env.d.ts'),
+  `
 // generate by ./scripts/generateEnvTypes.ts
 declare global {
   namespace NodeJS {
@@ -27,12 +31,12 @@ declare global {
   }
 }
 export {};
-  `, (err) => {
-  if (err)
-    console.log('生成 env.d.ts 文件失败')
-  else
-    console.log('成功生成 env.d.ts 文件')
-})
+  `,
+  (err) => {
+    if (err) console.log('生成 env.d.ts 文件失败')
+    else console.log('成功生成 env.d.ts 文件')
+  },
+)
 
 //   console.log('envObj:', envObj)
 
@@ -41,8 +45,7 @@ function formatValue(value) {
   try {
     const res = JSON.parse(value)
     _value = typeof res === 'object' ? value : res
-  }
-  catch (error) {
+  } catch (error) {
     _value = `'${value}'`
   }
   return _value

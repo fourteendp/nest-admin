@@ -10,13 +10,7 @@ export class FileUploadDto {
   @IsDefined()
   @IsFile(
     {
-      mimetypes: [
-        'image/png',
-        'image/gif',
-        'image/jpeg',
-        'image/webp',
-        'image/svg+xml',
-      ],
+      mimetypes: ['image/png', 'image/gif', 'image/jpeg', 'image/webp', 'image/svg+xml'],
       fileSize: 1024 * 1024 * 10,
     },
     {

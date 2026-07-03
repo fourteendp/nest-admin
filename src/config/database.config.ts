@@ -25,10 +25,7 @@ const dataSourceOptions: DataSourceOptions = {
 }
 export const dbRegToken = 'database'
 
-export const DatabaseConfig = registerAs(
-  dbRegToken,
-  (): DataSourceOptions => dataSourceOptions,
-)
+export const DatabaseConfig = registerAs(dbRegToken, (): DataSourceOptions => dataSourceOptions)
 
 export type IDatabaseConfig = ConfigType<typeof DatabaseConfig>
 

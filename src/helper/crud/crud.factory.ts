@@ -1,15 +1,6 @@
 import type { Type } from '@nestjs/common'
 
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Patch,
-  Post,
-  Put,
-  Query,
-} from '@nestjs/common'
+import { Body, Controller, Delete, Get, Patch, Post, Put, Query } from '@nestjs/common'
 import { ApiBody, IntersectionType, PartialType } from '@nestjs/swagger'
 import { upperFirst } from 'lodash'
 import pluralize from 'pluralize'
@@ -20,9 +11,15 @@ import { PagerDto } from '~/common/dto/pager.dto'
 
 import { BaseService } from './base.service'
 
-export function BaseCrudFactory<
-  E extends new (...args: any[]) => any,
->({ entity, dto, permissions }: { entity: E, dto?: Type<any>, permissions?: Record<string, string> }): Type<any> {
+export function BaseCrudFactory<E extends new (...args: any[]) => any>({
+  entity,
+  dto,
+  permissions,
+}: {
+  entity: E
+  dto?: Type<any>
+  permissions?: Record<string, string>
+}): Type<any> {
   const prefix = entity.name.toLowerCase().replace(/entity$/, '')
   const pluralizeName = pluralize(prefix) as string
 
@@ -38,17 +35,19 @@ export function BaseCrudFactory<
     static readonly name = upperFirst(`${pluralizeName}QueryDto`)
   }
 
-  permissions = permissions ?? {
-    LIST: `${prefix}:list`,
-    CREATE: `${prefix}:create`,
-    READ: `${prefix}:read`,
-    UPDATE: `${prefix}:update`,
-    DELETE: `${prefix}:delete`,
-  } as const
+  permissions =
+    permissions ??
+    ({
+      LIST: `${prefix}:list`,
+      CREATE: `${prefix}:create`,
+      READ: `${prefix}:read`,
+      UPDATE: `${prefix}:update`,
+      DELETE: `${prefix}:delete`,
+    } as const)
 
   @Controller(pluralizeName)
   class BaseController<S extends BaseService<E>> {
-    constructor(private service: S) { }
+    constructor(private service: S) {}
 
     @Get()
     @ApiResult({ type: [entity], isPage: true })

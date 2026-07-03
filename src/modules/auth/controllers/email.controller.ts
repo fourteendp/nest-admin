@@ -21,10 +21,7 @@ export class EmailController {
   @ApiOperation({ summary: '发送邮箱验证码' })
   @Public()
   @Throttle({ default: { limit: 2, ttl: 600000 } })
-  async sendEmailCode(
-    @Body() dto: SendEmailCodeDto,
-    @Ip() ip: string,
-  ): Promise<void> {
+  async sendEmailCode(@Body() dto: SendEmailCodeDto, @Ip() ip: string): Promise<void> {
     // await this.authService.checkImgCaptcha(dto.captchaId, dto.verifyCode);
     const { email } = dto
 

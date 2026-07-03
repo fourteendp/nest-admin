@@ -1,13 +1,5 @@
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger'
-import {
-  Column,
-  Entity,
-  OneToMany,
-  Relation,
-  Tree,
-  TreeChildren,
-  TreeParent,
-} from 'typeorm'
+import { Column, Entity, OneToMany, Relation, Tree, TreeChildren, TreeParent } from 'typeorm'
 
 import { CompleteEntity } from '~/common/entity/common.entity'
 
@@ -31,6 +23,6 @@ export class DeptEntity extends CompleteEntity {
   parent?: DeptEntity
 
   @ApiHideProperty()
-  @OneToMany(() => UserEntity, user => user.dept)
+  @OneToMany(() => UserEntity, (user) => user.dept)
   users: Relation<UserEntity[]>
 }

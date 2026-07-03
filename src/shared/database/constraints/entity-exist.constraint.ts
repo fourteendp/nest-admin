@@ -25,8 +25,7 @@ export class EntityExistConstraint implements ValidatorConstraintInterface {
   async validate(value: string, args: ValidationArguments) {
     let repo: Repository<any>
 
-    if (!value)
-      return true
+    if (!value) return true
     // 默认对比字段是id
     let field = 'id'
     // 通过传入的 entity 获取其 repository
@@ -34,8 +33,7 @@ export class EntityExistConstraint implements ValidatorConstraintInterface {
       // 传入的是对象 可以指定对比字段
       field = args.constraints[0].field ?? 'id'
       repo = this.dataSource.getRepository(args.constraints[0].entity)
-    }
-    else {
+    } else {
       // 传入的是实体类
       repo = this.dataSource.getRepository(args.constraints[0])
     }
@@ -45,8 +43,7 @@ export class EntityExistConstraint implements ValidatorConstraintInterface {
   }
 
   defaultMessage(args: ValidationArguments) {
-    if (!args.constraints[0])
-      return 'Model not been specified!'
+    if (!args.constraints[0]) return 'Model not been specified!'
 
     return `All instance of ${args.constraints[0].name} must been exists in databse!`
   }
@@ -63,12 +60,12 @@ function IsEntityExist(
 ): (object: Record<string, any>, propertyName: string) => void
 
 function IsEntityExist(
-  condition: { entity: ObjectType<any>, field?: string },
+  condition: { entity: ObjectType<any>; field?: string },
   validationOptions?: ValidationOptions,
 ): (object: Record<string, any>, propertyName: string) => void
 
 function IsEntityExist(
-  condition: ObjectType<any> | { entity: ObjectType<any>, field?: string },
+  condition: ObjectType<any> | { entity: ObjectType<any>; field?: string },
   validationOptions?: ValidationOptions,
 ): (object: Record<string, any>, propertyName: string) => void {
   return (object: Record<string, any>, propertyName: string) => {

@@ -7,14 +7,11 @@ export class TypeORMLogger implements ITypeORMLogger {
   constructor(private options: LoggerOptions) {}
 
   logQuery(query: string, parameters?: any[], _queryRunner?: QueryRunner) {
-    if (!this.isEnable('query'))
-      return
+    if (!this.isEnable('query')) return
 
-    const sql
-      = query
-      + (parameters && parameters.length
-        ? ` -- PARAMETERS: ${this.stringifyParams(parameters)}`
-        : '')
+    const sql =
+      query +
+      (parameters && parameters.length ? ` -- PARAMETERS: ${this.stringifyParams(parameters)}` : '')
 
     this.logger.log(`[QUERY]: ${sql}`)
   }
@@ -25,54 +22,37 @@ export class TypeORMLogger implements ITypeORMLogger {
     parameters?: any[],
     _queryRunner?: QueryRunner,
   ) {
-    if (!this.isEnable('error'))
-      return
+    if (!this.isEnable('error')) return
 
-    const sql
-      = query
-      + (parameters && parameters.length
-        ? ` -- PARAMETERS: ${this.stringifyParams(parameters)}`
-        : '')
+    const sql =
+      query +
+      (parameters && parameters.length ? ` -- PARAMETERS: ${this.stringifyParams(parameters)}` : '')
 
     this.logger.error([`[FAILED QUERY]: ${sql}`, `[QUERY ERROR]: ${error}`])
   }
 
-  logQuerySlow(
-    time: number,
-    query: string,
-    parameters?: any[],
-    _queryRunner?: QueryRunner,
-  ) {
-    const sql
-      = query
-      + (parameters && parameters.length
-        ? ` -- PARAMETERS: ${this.stringifyParams(parameters)}`
-        : '')
+  logQuerySlow(time: number, query: string, parameters?: any[], _queryRunner?: QueryRunner) {
+    const sql =
+      query +
+      (parameters && parameters.length ? ` -- PARAMETERS: ${this.stringifyParams(parameters)}` : '')
 
     this.logger.warn(`[SLOW QUERY: ${time} ms]: ${sql}`)
   }
 
   logSchemaBuild(message: string, _queryRunner?: QueryRunner) {
-    if (!this.isEnable('schema'))
-      return
+    if (!this.isEnable('schema')) return
 
     this.logger.log(message)
   }
 
   logMigration(message: string, _queryRunner?: QueryRunner) {
-    if (!this.isEnable('migration'))
-      return
+    if (!this.isEnable('migration')) return
 
     this.logger.log(message)
   }
 
-  log(
-    level: 'warn' | 'info' | 'log',
-    message: any,
-    _queryRunner?: QueryRunner,
-  ) {
-    if (!this.isEnable(level))
-      return
+  log(level: 'warn' | 'info' | 'log', message: any, _queryRunner?: QueryRunner) {
+    if (!this.isEnable(level)) return
 
     switch (level) {
       case 'log':
@@ -96,8 +76,7 @@ export class TypeORMLogger implements ITypeORMLogger {
   private stringifyParams(parameters: any[]) {
     try {
       return JSON.stringify(parameters)
-    }
-    catch (error) {
+    } catch (error) {
       // most probably circular objects in parameters
       return parameters
     }
@@ -110,9 +89,9 @@ export class TypeORMLogger implements ITypeORMLogger {
     level: 'query' | 'schema' | 'error' | 'warn' | 'info' | 'log' | 'migration',
   ): boolean {
     return (
-      this.options === 'all'
-      || this.options === true
-      || (Array.isArray(this.options) && this.options.includes(level))
+      this.options === 'all' ||
+      this.options === true ||
+      (Array.isArray(this.options) && this.options.includes(level))
     )
   }
 }

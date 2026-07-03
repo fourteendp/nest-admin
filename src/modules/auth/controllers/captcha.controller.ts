@@ -38,9 +38,7 @@ export class CaptchaController {
       charPreset: '1234567890',
     })
     const result = {
-      img: `data:image/svg+xml;base64,${Buffer.from(svg.data).toString(
-        'base64',
-      )}`,
+      img: `data:image/svg+xml;base64,${Buffer.from(svg.data).toString('base64')}`,
       id: generateUUID(),
     }
     // 5分钟过期时间

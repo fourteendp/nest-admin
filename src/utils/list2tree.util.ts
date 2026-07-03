@@ -14,7 +14,7 @@ export function list2Tree<T extends ListNode[]>(
   parentId: number | null = null,
 ): TreeNode<T[number]>[] {
   return items
-    .filter(item => item.parentId === parentId)
+    .filter((item) => item.parentId === parentId)
     .map((item) => {
       const children = list2Tree(items, item.id)
       return {
@@ -41,8 +41,7 @@ export function filterTree2List(treeData, key, value) {
 
       const data = { ...treeItem, children }
 
-      if (children.length)
-        resTree.push({ ...data })
+      if (children.length) resTree.push({ ...data })
     }
     return resTree
   }
@@ -59,12 +58,10 @@ export function filterTree<T extends TreeNode>(
   predicate: (data: T) => boolean,
 ): TreeNode<T>[] {
   function filter(treeData: TreeNode<T>[]): TreeNode<T>[] {
-    if (!treeData?.length)
-      return treeData
+    if (!treeData?.length) return treeData
 
     return treeData.filter((data) => {
-      if (!predicate(data))
-        return false
+      if (!predicate(data)) return false
 
       data.children = filter(data.children)
       return true
@@ -76,9 +73,7 @@ export function filterTree<T extends TreeNode>(
 
 export function deleteEmptyChildren(arr: any) {
   arr?.forEach((node) => {
-    if (node.children?.length === 0)
-      delete node.children
-    else
-      deleteEmptyChildren(node.children)
+    if (node.children?.length === 0) delete node.children
+    else deleteEmptyChildren(node.children)
   })
 }

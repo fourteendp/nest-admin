@@ -33,7 +33,12 @@ export abstract class CommonEntity extends BaseEntity {
 export abstract class CompleteEntity extends CommonEntity {
   @ApiHideProperty()
   @Exclude()
-  @Column({ name: 'create_by', update: false, comment: '创建者', nullable: true })
+  @Column({
+    name: 'create_by',
+    update: false,
+    comment: '创建者',
+    nullable: true,
+  })
   createBy: number
 
   @ApiHideProperty()
@@ -46,10 +51,14 @@ export abstract class CompleteEntity extends CommonEntity {
    * @see https://typeorm.io/decorator-reference#virtualcolumn
    */
   @ApiProperty({ description: '创建者' })
-  @VirtualColumn({ query: alias => `SELECT username FROM sys_user WHERE id = ${alias}.create_by` })
+  @VirtualColumn({
+    query: (alias) => `SELECT username FROM sys_user WHERE id = ${alias}.create_by`,
+  })
   creator: string
 
   @ApiProperty({ description: '更新者' })
-  @VirtualColumn({ query: alias => `SELECT username FROM sys_user WHERE id = ${alias}.update_by` })
+  @VirtualColumn({
+    query: (alias) => `SELECT username FROM sys_user WHERE id = ${alias}.update_by`,
+  })
   updater: string
 }

@@ -16,7 +16,11 @@ import { IdParam } from '~/common/decorators/id-param.decorator'
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
 import { CreatorPipe } from '~/common/pipes/creator.pipe'
 import { UpdaterPipe } from '~/common/pipes/updater.pipe'
-import { definePermission, getDefinePermissions, Perm } from '~/modules/auth/decorators/permission.decorator'
+import {
+  definePermission,
+  getDefinePermissions,
+  Perm,
+} from '~/modules/auth/decorators/permission.decorator'
 
 import { MenuDto, MenuQueryDto, MenuUpdateDto } from './menu.dto'
 import { MenuItemInfo } from './menu.model'
@@ -57,8 +61,7 @@ export class MenuController {
   async create(@Body(CreatorPipe) dto: MenuDto): Promise<void> {
     // check
     await this.menuService.check(dto)
-    if (!dto.parentId)
-      dto.parentId = null
+    if (!dto.parentId) dto.parentId = null
 
     await this.menuService.create(dto)
     if (dto.type === 2) {
@@ -73,8 +76,7 @@ export class MenuController {
   async update(@IdParam() id: number, @Body(UpdaterPipe) dto: MenuUpdateDto): Promise<void> {
     // check
     await this.menuService.check(dto)
-    if (dto.parentId === -1 || !dto.parentId)
-      dto.parentId = null
+    if (dto.parentId === -1 || !dto.parentId) dto.parentId = null
 
     await this.menuService.update(id, dto)
     if (dto.type === 2) {

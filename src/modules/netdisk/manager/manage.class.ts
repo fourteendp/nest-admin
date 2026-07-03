@@ -49,8 +49,7 @@ export class SFileInfoDetail {
   mimeType: string
 
   @ApiProperty({
-    description:
-      '文件存储类型，2 表示归档存储，1 表示低频存储，0表示普通存储。',
+    description: '文件存储类型，2 表示归档存储，1 表示低频存储，0表示普通存储。',
   })
   type: number
 

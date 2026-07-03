@@ -28,8 +28,7 @@ export class UploadController {
     type: FileUploadDto,
   })
   async upload(@Req() req: FastifyRequest, @AuthUser() user: IAuthUser) {
-    if (!req.isMultipart())
-      throw new BadRequestException('Request is not multipart')
+    if (!req.isMultipart()) throw new BadRequestException('Request is not multipart')
 
     const file = await req.file()
 
@@ -44,8 +43,7 @@ export class UploadController {
       return {
         filename: path,
       }
-    }
-    catch (error) {
+    } catch (error) {
       console.log(error)
       throw new BadRequestException('上传失败')
     }

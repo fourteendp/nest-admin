@@ -9,8 +9,7 @@ export function ToNumber(): PropertyDecorator {
     (params) => {
       const value = params.value as string[] | string
 
-      if (isArray(value))
-        return value.map(v => Number(v))
+      if (isArray(value)) return value.map((v) => Number(v))
 
       return Number(value)
     },
@@ -26,8 +25,7 @@ export function ToInt(): PropertyDecorator {
     (params) => {
       const value = params.value as string[] | string
 
-      if (isArray(value))
-        return value.map(v => Number.parseInt(v))
+      if (isArray(value)) return value.map((v) => Number.parseInt(v))
 
       return Number.parseInt(value)
     },
@@ -62,8 +60,7 @@ export function ToDate(): PropertyDecorator {
     (params) => {
       const { value } = params
 
-      if (!value)
-        return
+      if (!value) return
 
       return new Date(value)
     },
@@ -79,8 +76,7 @@ export function ToArray(): PropertyDecorator {
     (params) => {
       const { value } = params
 
-      if (isNil(value))
-        return []
+      if (isNil(value)) return []
 
       return castArray(value)
     },
@@ -96,8 +92,7 @@ export function ToTrim(): PropertyDecorator {
     (params) => {
       const value = params.value as string[] | string
 
-      if (isArray(value))
-        return value.map(v => trim(v))
+      if (isArray(value)) return value.map((v) => trim(v))
 
       return trim(value)
     },
@@ -113,11 +108,9 @@ export function ToLowerCase(): PropertyDecorator {
     (params) => {
       const value = params.value as string[] | string
 
-      if (!value)
-        return
+      if (!value) return
 
-      if (isArray(value))
-        return value.map(v => v.toLowerCase())
+      if (isArray(value)) return value.map((v) => v.toLowerCase())
 
       return value.toLowerCase()
     },
@@ -133,11 +126,9 @@ export function ToUpperCase(): PropertyDecorator {
     (params) => {
       const value = params.value as string[] | string
 
-      if (!value)
-        return
+      if (!value) return
 
-      if (isArray(value))
-        return value.map(v => v.toUpperCase())
+      if (isArray(value)) return value.map((v) => v.toUpperCase())
 
       return value.toUpperCase()
     },

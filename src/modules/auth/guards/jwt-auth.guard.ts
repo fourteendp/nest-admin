@@ -1,9 +1,4 @@
-import {
-  ExecutionContext,
-  Inject,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common'
+import { ExecutionContext, Inject, Injectable, UnauthorizedException } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
 import { AuthGuard } from '@nestjs/passport'
 import { FastifyRequest } from 'fastify'
@@ -57,18 +52,15 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
     ])
     const request = context.switchToHttp().getRequest<FastifyRequest<RequestType>>()
     // const response = context.switchToHttp().getResponse<FastifyReply>()
-    if (RouterWhiteList.includes(request.routeOptions.url))
-      return true
+    if (RouterWhiteList.includes(request.routeOptions.url)) return true
     // TODO 此处代码的作用是判断如果在演示环境下，则拒绝用户的增删改操作，去掉此代码不影响正常的业务逻辑
-    if (request.method !== 'GET' && !request.url.includes('/auth/login'))
-      checkIsDemoMode()
+    if (request.method !== 'GET' && !request.url.includes('/auth/login')) checkIsDemoMode()
 
     const isSse = request.headers.accept === 'text/event-stream'
 
     if (isSse && !request.headers.authorization?.startsWith('Bearer ')) {
       const { token } = request.query
-      if (token)
-        request.headers.authorization = `Bearer ${token}`
+      if (token) request.headers.authorization = `Bearer ${token}`
     }
 
     const token = this.jwtFromRequestFn(request)
@@ -82,26 +74,19 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
     let result: any = false
     try {
       result = await super.canActivate(context)
-    }
-    catch (err) {
+    } catch (err) {
       // 需要后置判断 这样携带了 token 的用户就能够解析到 request.user
-      if (isPublic)
-        return true
+      if (isPublic) return true
 
-      if (isEmpty(token))
-        throw new UnauthorizedException('未登录')
+      if (isEmpty(token)) throw new UnauthorizedException('未登录')
 
       // 在 handleRequest 中 user 为 null 时会抛出 UnauthorizedException
-      if (err instanceof UnauthorizedException)
-        throw new BusinessException(ErrorEnum.INVALID_LOGIN)
+      if (err instanceof UnauthorizedException) throw new BusinessException(ErrorEnum.INVALID_LOGIN)
 
       // 判断 token 是否有效且存在, 如果不存在则认证失败
-      const isValid = isNil(token)
-        ? undefined
-        : await this.tokenService.checkAccessToken(token!)
+      const isValid = isNil(token) ? undefined : await this.tokenService.checkAccessToken(token!)
 
-      if (!isValid)
-        throw new BusinessException(ErrorEnum.INVALID_LOGIN)
+      if (!isValid) throw new BusinessException(ErrorEnum.INVALID_LOGIN)
     }
 
     // SSE 请求
@@ -133,8 +118,7 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
 
   handleRequest(err, user, info) {
     // You can throw an exception based on either "info" or "err" arguments
-    if (err || !user)
-      throw err || new UnauthorizedException()
+    if (err || !user) throw err || new UnauthorizedException()
 
     return user
   }

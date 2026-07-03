@@ -32,7 +32,7 @@ export class RefreshTokenEntity extends BaseEntity {
   @CreateDateColumn({ comment: '令牌创建时间' })
   created_at!: Date
 
-  @OneToOne(() => AccessTokenEntity, accessToken => accessToken.refreshToken, {
+  @OneToOne(() => AccessTokenEntity, (accessToken) => accessToken.refreshToken, {
     onDelete: 'CASCADE',
   })
   @JoinColumn()

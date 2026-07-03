@@ -48,7 +48,7 @@ export class MenuEntity extends CompleteEntity {
   @Column({ type: 'smallint', default: 1 })
   status: number
 
-  @ManyToMany(() => RoleEntity, role => role.menus, {
+  @ManyToMany(() => RoleEntity, (role) => role.menus, {
     onDelete: 'CASCADE',
   })
   roles: Relation<RoleEntity[]>

@@ -25,12 +25,7 @@ import { TokenService } from './services/token.service'
 import { JwtStrategy } from './strategies/jwt.strategy'
 import { LocalStrategy } from './strategies/local.strategy'
 
-const controllers = [
-  AuthController,
-  AccountController,
-  CaptchaController,
-  EmailController,
-]
+const controllers = [AuthController, AccountController, CaptchaController, EmailController]
 const providers = [AuthService, TokenService, CaptchaService]
 const strategies = [LocalStrategy, JwtStrategy]
 
@@ -41,8 +36,7 @@ const strategies = [LocalStrategy, JwtStrategy]
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService<ConfigKeyPaths>) => {
-        const { jwtSecret, jwtExprire }
-          = configService.get<ISecurityConfig>('security')
+        const { jwtSecret, jwtExprire } = configService.get<ISecurityConfig>('security')
 
         return {
           secret: jwtSecret,

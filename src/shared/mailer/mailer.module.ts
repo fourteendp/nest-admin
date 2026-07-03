@@ -9,9 +9,7 @@ import { ConfigKeyPaths, IAppConfig, IMailerConfig } from '~/config'
 
 import { MailerService } from './mailer.service'
 
-const providers: Provider<any>[] = [
-  MailerService,
-]
+const providers: Provider<any>[] = [MailerService]
 
 @Module({
   imports: [

@@ -29,11 +29,11 @@ export class RoleEntity extends CompleteEntity {
   default: boolean
 
   @ApiHideProperty()
-  @ManyToMany(() => UserEntity, user => user.roles)
+  @ManyToMany(() => UserEntity, (user) => user.roles)
   users: Relation<UserEntity[]>
 
   @ApiHideProperty()
-  @ManyToMany(() => MenuEntity, menu => menu.roles, {})
+  @ManyToMany(() => MenuEntity, (menu) => menu.roles, {})
   @JoinTable({
     name: 'sys_role_menus',
     joinColumn: { name: 'role_id', referencedColumnName: 'id' },

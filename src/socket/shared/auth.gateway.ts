@@ -1,9 +1,6 @@
-import type {
-  OnGatewayConnection,
-  OnGatewayDisconnect,
-} from '@nestjs/websockets'
+import type { OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets'
 import type { Socket } from 'socket.io'
-import { } from '@nestjs/common'
+import {} from '@nestjs/common'
 import { OnEvent } from '@nestjs/event-emitter'
 import { JwtService } from '@nestjs/jwt'
 import { WebSocketServer } from '@nestjs/websockets'
@@ -23,9 +20,12 @@ export interface AuthGatewayOptions {
 
 // eslint-disable-next-line ts/ban-ts-comment
 // @ts-expect-error
-export interface IAuthGateway extends OnGatewayConnection, OnGatewayDisconnect, BroadcastBaseGateway {}
+export interface IAuthGateway
+  extends OnGatewayConnection, OnGatewayDisconnect, BroadcastBaseGateway {}
 
-export function createAuthGateway(options: AuthGatewayOptions): new (...args: any[]) => IAuthGateway {
+export function createAuthGateway(
+  options: AuthGatewayOptions,
+): new (...args: any[]) => IAuthGateway {
   const { namespace } = options
 
   class AuthGateway extends BroadcastBaseGateway implements IAuthGateway {
@@ -41,24 +41,19 @@ export function createAuthGateway(options: AuthGatewayOptions): new (...args: an
     protected namespace: Namespace
 
     async authFailed(client: Socket) {
-      client.send(
-        this.gatewayMessageFormat(BusinessEvents.AUTH_FAILED, '认证失败'),
-      )
+      client.send(this.gatewayMessageFormat(BusinessEvents.AUTH_FAILED, '认证失败'))
       client.disconnect()
     }
 
     async authToken(token: string): Promise<boolean> {
-      if (typeof token !== 'string')
-        return false
+      if (typeof token !== 'string') return false
 
       const validJwt = async () => {
         try {
           const ok = await this.jwtService.verifyAsync(token)
 
-          if (!ok)
-            return false
-        }
-        catch {
+          if (!ok) return false
+        } catch {
           return false
         }
         // is not crash, is verify
@@ -69,15 +64,13 @@ export function createAuthGateway(options: AuthGatewayOptions): new (...args: an
     }
 
     async handleConnection(client: Socket) {
-      const token
-        = client.handshake.query.token
-        || client.handshake.headers.authorization
-        || client.handshake.headers.Authorization
-      if (!token)
-        return this.authFailed(client)
+      const token =
+        client.handshake.query.token ||
+        client.handshake.headers.authorization ||
+        client.handshake.headers.Authorization
+      if (!token) return this.authFailed(client)
 
-      if (!(await this.authToken(token as string)))
-        return this.authFailed(client)
+      if (!(await this.authToken(token as string))) return this.authFailed(client)
 
       super.handleConnect(client)
 
@@ -97,8 +90,7 @@ export function createAuthGateway(options: AuthGatewayOptions): new (...args: an
 
       const server = this.namespace.server
       const sid = this.tokenSocketIdMap.get(token)
-      if (!sid)
-        return false
+      if (!sid) return false
 
       const socket = server.of(`/${namespace}`).sockets.get(sid)
       if (socket) {
@@ -110,7 +102,9 @@ export function createAuthGateway(options: AuthGatewayOptions): new (...args: an
     }
 
     override broadcast(event: BusinessEvents, data: any) {
-      this.cacheService.emitter.of(`/${namespace}`).emit('message', this.gatewayMessageFormat(event, data))
+      this.cacheService.emitter
+        .of(`/${namespace}`)
+        .emit('message', this.gatewayMessageFormat(event, data))
     }
   }
 

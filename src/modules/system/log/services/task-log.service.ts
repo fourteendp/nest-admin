@@ -15,12 +15,7 @@ export class TaskLogService {
     private taskLogRepository: Repository<TaskLogEntity>,
   ) {}
 
-  async create(
-    tid: number,
-    status: number,
-    time?: number,
-    err?: string,
-  ): Promise<number> {
+  async create(tid: number, status: number, time?: number, err?: string): Promise<number> {
     const result = await this.taskLogRepository.save({
       status,
       detail: err,

@@ -21,8 +21,7 @@ export class EmailJob {
       const { to, subject, content } = config
       const result = await this.emailService.send(to, subject, content)
       this.logger.log(result, EmailJob.name)
-    }
-    else {
+    } else {
       throw new BadRequestException('Email send job param is empty')
     }
   }

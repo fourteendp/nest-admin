@@ -33,8 +33,7 @@ export class DeptService {
       .where({ id })
       .getOne()
 
-    if (isEmpty(dept))
-      throw new BusinessException(ErrorEnum.DEPARTMENT_NOT_FOUND)
+    if (isEmpty(dept)) throw new BusinessException(ErrorEnum.DEPARTMENT_NOT_FOUND)
 
     return dept
   }
@@ -52,10 +51,7 @@ export class DeptService {
   }
 
   async update(id: number, { parentId, ...data }: DeptDto): Promise<void> {
-    const item = await this.deptRepository
-      .createQueryBuilder('dept')
-      .where({ id })
-      .getOne()
+    const item = await this.deptRepository.createQueryBuilder('dept').where({ id }).getOne()
 
     const parent = await this.deptRepository
       .createQueryBuilder('dept')
@@ -100,10 +96,7 @@ export class DeptService {
   /**
    * 获取部门列表树结构
    */
-  async getDeptTree(
-    uid: number,
-    { name }: DeptQueryDto,
-  ): Promise<DeptEntity[]> {
+  async getDeptTree(uid: number, { name }: DeptQueryDto): Promise<DeptEntity[]> {
     const tree: DeptEntity[] = []
 
     if (name) {

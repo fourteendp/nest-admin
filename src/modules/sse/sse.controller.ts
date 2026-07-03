@@ -1,4 +1,14 @@
-import { BeforeApplicationShutdown, Controller, Headers, Ip, Param, ParseIntPipe, Req, Res, Sse } from '@nestjs/common'
+import {
+  BeforeApplicationShutdown,
+  Controller,
+  Headers,
+  Ip,
+  Param,
+  ParseIntPipe,
+  Req,
+  Res,
+  Sse,
+} from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 import { SkipThrottle } from '@nestjs/throttler'
 import { FastifyReply, FastifyRequest } from 'fastify'
@@ -17,7 +27,10 @@ import { MessageEvent, SseService } from './sse.service'
 export class SseController implements BeforeApplicationShutdown {
   private replyMap: Map<number, FastifyReply> = new Map()
 
-  constructor(private readonly sseService: SseService, private onlineService: OnlineService) { }
+  constructor(
+    private readonly sseService: SseService,
+    private onlineService: OnlineService,
+  ) {}
 
   private closeAllConnect() {
     this.sseService.sendToAllUser({

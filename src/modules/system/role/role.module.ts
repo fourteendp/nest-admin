@@ -12,10 +12,7 @@ import { RoleService } from './role.service'
 const providers = [RoleService, SseService]
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([RoleEntity]),
-    forwardRef(() => MenuModule),
-  ],
+  imports: [TypeOrmModule.forFeature([RoleEntity]), forwardRef(() => MenuModule)],
   controllers: [RoleController],
   providers: [...providers],
   exports: [TypeOrmModule, ...providers],

@@ -34,7 +34,10 @@ export class OnlineService {
   /** 在线用户数量变动时，通知前端实时更新在线用户数量或列表, 3 秒内最多推送一次，避免频繁触发 */
   updateOnlineUserCount = throttle(async () => {
     const keys = await this.redis.keys(genOnlineUserKey('*'))
-    this.sseService.sendToAllUser({ type: 'updateOnlineUserCount', data: keys.length })
+    this.sseService.sendToAllUser({
+      type: 'updateOnlineUserCount',
+      data: keys.length,
+    })
   }, 3000)
 
   async addOnlineUser(value: string, ip: string, ua: string) {
@@ -48,8 +51,7 @@ export class OnlineService {
       cache: true,
     })
 
-    if (!token)
-      return
+    if (!token) return
 
     const tokenPaload = await this.tokenService.verifyAccessToken(value)
     const exp = ~~(tokenPaload.exp - Date.now() / 1000)
@@ -101,12 +103,14 @@ export class OnlineService {
     const users = await this.redis.mget(keys)
     const rootUserId = await this.userService.findRootUserId()
 
-    return users.map((e) => {
-      const item = JSON.parse(e) as OnlineUserInfo
-      item.isCurrent = token?.id === item.tokenId
-      item.disable = item.isCurrent || item.uid === rootUserId
-      return item
-    }).sort((a, b) => a.time > b.time ? -1 : 1)
+    return users
+      .map((e) => {
+        const item = JSON.parse(e) as OnlineUserInfo
+        item.isCurrent = token?.id === item.tokenId
+        item.disable = item.isCurrent || item.uid === rootUserId
+        return item
+      })
+      .sort((a, b) => (a.time > b.time ? -1 : 1))
   }
 
   /**
@@ -118,8 +122,7 @@ export class OnlineService {
       relations: ['user'],
       cache: true,
     })
-    if (!token)
-      return
+    if (!token) return
     const rootUserId = await this.userService.findRootUserId()
     const targetUid = token.user.id
     if (targetUid === rootUserId || targetUid === user.uid)

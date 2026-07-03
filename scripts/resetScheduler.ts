@@ -6,11 +6,8 @@ import { CronJob } from 'cron'
 
 const runMigrationGenerate = async function () {
   exec('npm run migration:revert && npm run migration:run', (error, stdout, stderr) => {
-    if (!error)
-      console.log('操作成功', error)
-
-    else
-      console.log('操作失败', error)
+    if (!error) console.log('操作成功', error)
+    else console.log('操作失败', error)
   })
 }
 

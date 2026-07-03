@@ -57,7 +57,7 @@ export class UserDto {
 
   @ApiProperty({ description: '邮箱', example: 'bqy.dev@qq.com' })
   @IsEmail()
-  @ValidateIf(o => !isEmpty(o.email))
+  @ValidateIf((o) => !isEmpty(o.email))
   email: string
 
   @ApiProperty({ description: '手机号' })

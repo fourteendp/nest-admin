@@ -62,8 +62,9 @@ export class AccountController {
   @ApiOperation({ summary: '更改账户资料' })
   @AllowAnon()
   async update(
-    @AuthUser() user: IAuthUser, @Body()
-dto: AccountUpdateDto,
+    @AuthUser() user: IAuthUser,
+    @Body()
+    dto: AccountUpdateDto,
   ): Promise<void> {
     await this.userService.updateAccountInfo(user.uid, dto)
   }
@@ -72,8 +73,9 @@ dto: AccountUpdateDto,
   @ApiOperation({ summary: '更改账户密码' })
   @AllowAnon()
   async password(
-    @AuthUser() user: IAuthUser, @Body()
-dto: PasswordUpdateDto,
+    @AuthUser() user: IAuthUser,
+    @Body()
+    dto: PasswordUpdateDto,
   ): Promise<void> {
     await this.userService.updatePassword(user.uid, dto)
   }

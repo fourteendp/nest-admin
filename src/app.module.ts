@@ -45,7 +45,9 @@ import { SocketModule } from './socket/socket.module'
       interceptor: {
         mount: true,
         setup: (cls, context) => {
-          const req = context.switchToHttp().getRequest<FastifyRequest<{ Params: { id?: string } }>>()
+          const req = context
+            .switchToHttp()
+            .getRequest<FastifyRequest<{ Params: { id?: string } }>>()
           if (req.params?.id && req.body) {
             // 供自定义参数验证器(UniqueConstraint)使用
             cls.set('operateId', Number.parseInt(req.params.id))
@@ -76,13 +78,15 @@ import { SocketModule } from './socket/socket.module'
 
     { provide: APP_INTERCEPTOR, useClass: ClassSerializerInterceptor },
     { provide: APP_INTERCEPTOR, useClass: TransformInterceptor },
-    { provide: APP_INTERCEPTOR, useFactory: () => new TimeoutInterceptor(15 * 1000) },
+    {
+      provide: APP_INTERCEPTOR,
+      useFactory: () => new TimeoutInterceptor(15 * 1000),
+    },
     { provide: APP_INTERCEPTOR, useClass: IdempotenceInterceptor },
 
     { provide: APP_GUARD, useClass: JwtAuthGuard },
     { provide: APP_GUARD, useClass: RbacGuard },
     { provide: APP_GUARD, useClass: ThrottlerGuard },
-
   ],
 })
 export class AppModule {}

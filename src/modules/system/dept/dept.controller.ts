@@ -33,7 +33,7 @@ export class DeptController {
   @ApiOperation({ summary: '获取部门列表' })
   @ApiResult({ type: [DeptEntity] })
   @Perm(permissions.LIST)
-  async list(@Query() dto: DeptQueryDto, @AuthUser('uid')uid: number): Promise<DeptEntity[]> {
+  async list(@Query() dto: DeptQueryDto, @AuthUser('uid') uid: number): Promise<DeptEntity[]> {
     return this.deptService.getDeptTree(uid, dto)
   }
 
@@ -64,13 +64,11 @@ export class DeptController {
   async delete(@IdParam() id: number): Promise<void> {
     // 查询是否有关联用户或者部门，如果含有则无法删除
     const count = await this.deptService.countUserByDeptId(id)
-    if (count > 0)
-      throw new BusinessException(ErrorEnum.DEPARTMENT_HAS_ASSOCIATED_USERS)
+    if (count > 0) throw new BusinessException(ErrorEnum.DEPARTMENT_HAS_ASSOCIATED_USERS)
 
     const count2 = await this.deptService.countChildDept(id)
     console.log('count2', count2)
-    if (count2 > 0)
-      throw new BusinessException(ErrorEnum.DEPARTMENT_HAS_CHILD_DEPARTMENTS)
+    if (count2 > 0) throw new BusinessException(ErrorEnum.DEPARTMENT_HAS_CHILD_DEPARTMENTS)
 
     await this.deptService.delete(id)
   }

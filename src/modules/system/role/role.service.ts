@@ -25,10 +25,7 @@ export class RoleService {
   /**
    * 列举所有角色：除去超级管理员
    */
-  async findAll({
-    page,
-    pageSize,
-  }: PagerDto): Promise<Pagination<RoleEntity>> {
+  async findAll({ page, pageSize }: PagerDto): Promise<Pagination<RoleEntity>> {
     return paginate(this.roleRepository, { page, pageSize })
   }
 
@@ -43,14 +40,12 @@ export class RoleService {
     remark,
     status,
   }: RoleQueryDto): Promise<Pagination<RoleEntity>> {
-    const queryBuilder = await this.roleRepository
-      .createQueryBuilder('role')
-      .where({
-        ...(name ? { name: Like(`%${name}%`) } : null),
-        ...(value ? { value: Like(`%${value}%`) } : null),
-        ...(remark ? { remark: Like(`%${remark}%`) } : null),
-        ...(!isNil(status) ? { status } : null),
-      })
+    const queryBuilder = await this.roleRepository.createQueryBuilder('role').where({
+      ...(name ? { name: Like(`%${name}%`) } : null),
+      ...(value ? { value: Like(`%${value}%`) } : null),
+      ...(remark ? { remark: Like(`%${remark}%`) } : null),
+      ...(!isNil(status) ? { status } : null),
+    })
 
     return paginate<RoleEntity>(queryBuilder, {
       page,
@@ -74,12 +69,11 @@ export class RoleService {
       select: ['id'],
     })
 
-    return { ...info, menuIds: menus.map(m => m.id) }
+    return { ...info, menuIds: menus.map((m) => m.id) }
   }
 
   async delete(id: number): Promise<void> {
-    if (id === ROOT_ROLE_ID)
-      throw new Error('不能删除超级管理员')
+    if (id === ROOT_ROLE_ID) throw new Error('不能删除超级管理员')
     await this.roleRepository.delete(id)
   }
 
@@ -89,9 +83,7 @@ export class RoleService {
   async create({ menuIds, ...data }: RoleDto): Promise<{ roleId: number }> {
     const role = await this.roleRepository.save({
       ...data,
-      menus: menuIds
-        ? await this.menuRepository.findBy({ id: In(menuIds) })
-        : [],
+      menus: menuIds ? await this.menuRepository.findBy({ id: In(menuIds) }) : [],
     })
 
     return { roleId: role.id }
@@ -105,9 +97,7 @@ export class RoleService {
     await this.roleRepository.update(id, data)
     await this.entityManager.transaction(async (manager) => {
       const role = await this.roleRepository.findOne({ where: { id } })
-      role.menus = menuIds?.length
-        ? await this.menuRepository.findBy({ id: In(menuIds) })
-        : []
+      role.menus = menuIds?.length ? await this.menuRepository.findBy({ id: In(menuIds) }) : []
       await manager.save(role)
     })
   }
@@ -122,8 +112,7 @@ export class RoleService {
       },
     })
 
-    if (!isEmpty(roles))
-      return roles.map(r => r.id)
+    if (!isEmpty(roles)) return roles.map((r) => r.id)
 
     return []
   }
@@ -133,7 +122,7 @@ export class RoleService {
       await this.roleRepository.findBy({
         id: In(ids),
       })
-    ).map(r => r.value)
+    ).map((r) => r.value)
   }
 
   async isAdminRoleByUser(uid: number): Promise<boolean> {
@@ -144,9 +133,7 @@ export class RoleService {
     })
 
     if (!isEmpty(roles)) {
-      return roles.some(
-        r => r.id === ROOT_ROLE_ID,
-      )
+      return roles.some((r) => r.id === ROOT_ROLE_ID)
     }
     return false
   }

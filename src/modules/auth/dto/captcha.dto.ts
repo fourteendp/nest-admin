@@ -1,12 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { Type } from 'class-transformer'
-import {
-  IsEmail,
-  IsInt,
-  IsMobilePhone,
-  IsOptional,
-  IsString,
-} from 'class-validator'
+import { IsEmail, IsInt, IsMobilePhone, IsOptional, IsString } from 'class-validator'
 
 export class ImageCaptchaDto {
   @ApiProperty({

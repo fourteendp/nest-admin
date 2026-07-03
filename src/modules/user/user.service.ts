@@ -9,7 +9,12 @@ import { InjectRedis } from '~/common/decorators/inject-redis.decorator'
 import { BusinessException } from '~/common/exceptions/biz.exception'
 import { ErrorEnum } from '~/constants/error-code.constant'
 import { ROOT_ROLE_ID, SYS_USER_INITPASSWORD } from '~/constants/system.constant'
-import { genAuthPermKey, genAuthPVKey, genAuthTokenKey, genOnlineUserKey } from '~/helper/genRedisKey'
+import {
+  genAuthPermKey,
+  genAuthPVKey,
+  genAuthTokenKey,
+  genOnlineUserKey,
+} from '~/helper/genRedisKey'
 
 import { paginate } from '~/helper/paginate'
 import { Pagination } from '~/helper/paginate/pagination'
@@ -75,8 +80,7 @@ export class UserService {
       .where(`user.id = :uid`, { uid })
       .getOne()
 
-    if (isEmpty(user))
-      throw new BusinessException(ErrorEnum.USER_NOT_FOUND)
+    if (isEmpty(user)) throw new BusinessException(ErrorEnum.USER_NOT_FOUND)
 
     delete user?.psalt
 
@@ -88,8 +92,7 @@ export class UserService {
    */
   async updateAccountInfo(uid: number, info: AccountUpdateDto): Promise<void> {
     const user = await this.userRepository.findOneBy({ id: uid })
-    if (isEmpty(user))
-      throw new BusinessException(ErrorEnum.USER_NOT_FOUND)
+    if (isEmpty(user)) throw new BusinessException(ErrorEnum.USER_NOT_FOUND)
 
     const data = {
       ...(info.nickname ? { nickname: info.nickname } : null),
@@ -102,8 +105,7 @@ export class UserService {
 
     if (!info.avatar && info.qq) {
       // 如果qq不等于原qq，则更新qq头像
-      if (info.qq !== user.qq)
-        data.avatar = await this.qqService.getAvater(info.qq)
+      if (info.qq !== user.qq) data.avatar = await this.qqService.getAvater(info.qq)
     }
 
     await this.userRepository.update(uid, data)
@@ -114,13 +116,11 @@ export class UserService {
    */
   async updatePassword(uid: number, dto: PasswordUpdateDto): Promise<void> {
     const user = await this.userRepository.findOneBy({ id: uid })
-    if (isEmpty(user))
-      throw new BusinessException(ErrorEnum.USER_NOT_FOUND)
+    if (isEmpty(user)) throw new BusinessException(ErrorEnum.USER_NOT_FOUND)
 
     const comparePassword = md5(`${dto.oldPassword}${user.psalt}`)
     // 原密码不一致，不允许更改
-    if (user.password !== comparePassword)
-      throw new BusinessException(ErrorEnum.PASSWORD_MISMATCH)
+    if (user.password !== comparePassword) throw new BusinessException(ErrorEnum.PASSWORD_MISMATCH)
 
     const password = md5(`${dto.newPassword}${user.psalt}`)
     await this.userRepository.update({ id: uid }, { password })
@@ -141,29 +141,19 @@ export class UserService {
   /**
    * 增加系统用户，如果返回false则表示已存在该用户
    */
-  async create({
-    username,
-    password,
-    roleIds,
-    deptId,
-    ...data
-  }: UserDto): Promise<void> {
+  async create({ username, password, roleIds, deptId, ...data }: UserDto): Promise<void> {
     const exists = await this.userRepository.findOneBy({
       username,
     })
-    if (!isEmpty(exists))
-      throw new BusinessException(ErrorEnum.SYSTEM_USER_EXISTS)
+    if (!isEmpty(exists)) throw new BusinessException(ErrorEnum.SYSTEM_USER_EXISTS)
 
     await this.entityManager.transaction(async (manager) => {
       const salt = randomValue(32)
 
       if (!password) {
-        const initPassword = await this.paramConfigService.findValueByKey(
-          SYS_USER_INITPASSWORD,
-        )
+        const initPassword = await this.paramConfigService.findValueByKey(SYS_USER_INITPASSWORD)
         password = md5(`${initPassword ?? '123456'}${salt}`)
-      }
-      else {
+      } else {
         password = md5(`${password ?? '123456'}${salt}`)
       }
       const u = manager.create(UserEntity, {
@@ -188,8 +178,7 @@ export class UserService {
     { password, deptId, roleIds, status, ...data }: UserUpdateDto,
   ): Promise<void> {
     await this.entityManager.transaction(async (manager) => {
-      if (password)
-        await this.forceUpdatePassword(id, password)
+      if (password) await this.forceUpdatePassword(id, password)
 
       await manager.update(UserEntity, id, {
         ...data,
@@ -210,11 +199,7 @@ export class UserService {
           .addAndRemove(roleIds, user.roles)
       }
       if (deptId) {
-        await manager
-          .createQueryBuilder()
-          .relation(UserEntity, 'dept')
-          .of(id)
-          .set(deptId)
+        await manager.createQueryBuilder().relation(UserEntity, 'dept').of(id).set(deptId)
       }
 
       if (status === 0) {
@@ -247,8 +232,7 @@ export class UserService {
    */
   async delete(userIds: number[]): Promise<void | never> {
     const rootUserId = await this.findRootUserId()
-    if (userIds.includes(rootUserId))
-      throw new BadRequestException('不能删除root用户!')
+    if (userIds.includes(rootUserId)) throw new BadRequestException('不能删除root用户!')
 
     await this.userRepository.delete(userIds)
   }
@@ -287,8 +271,7 @@ export class UserService {
         ...(!isNil(status) ? { status } : null),
       })
 
-    if (deptId)
-      queryBuilder.andWhere('dept.id = :deptId', { deptId })
+    if (deptId) queryBuilder.andWhere('dept.id = :deptId', { deptId })
 
     return paginate<UserEntity>(queryBuilder, {
       page,
@@ -336,8 +319,7 @@ export class UserService {
   async upgradePasswordV(id: number): Promise<void> {
     // admin:passwordVersion:${param.id}
     const v = await this.redis.get(genAuthPVKey(id))
-    if (!isEmpty(v))
-      await this.redis.set(genAuthPVKey(id), Number.parseInt(v) + 1)
+    if (!isEmpty(v)) await this.redis.set(genAuthPVKey(id), Number.parseInt(v) + 1)
   }
 
   /**
@@ -345,8 +327,7 @@ export class UserService {
    */
   async exist(username: string) {
     const user = await this.userRepository.findOneBy({ username })
-    if (isNil(user))
-      throw new BusinessException(ErrorEnum.SYSTEM_USER_EXISTS)
+    if (isNil(user)) throw new BusinessException(ErrorEnum.SYSTEM_USER_EXISTS)
 
     return true
   }
@@ -358,8 +339,7 @@ export class UserService {
     const exists = await this.userRepository.findOneBy({
       username,
     })
-    if (!isEmpty(exists))
-      throw new BusinessException(ErrorEnum.SYSTEM_USER_EXISTS)
+    if (!isEmpty(exists)) throw new BusinessException(ErrorEnum.SYSTEM_USER_EXISTS)
 
     await this.entityManager.transaction(async (manager) => {
       const salt = randomValue(32)

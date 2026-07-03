@@ -18,8 +18,7 @@ export class RedisSubPub {
       port: this.redisConfig.port,
     }
 
-    if (this.redisConfig.password)
-      redisOptions.password = this.redisConfig.password
+    if (this.redisConfig.password) redisOptions.password = this.redisConfig.password
 
     const pubClient = new IORedis(redisOptions)
     const subClient = pubClient.duplicate()
@@ -30,8 +29,7 @@ export class RedisSubPub {
   public async publish(event: string, data: any) {
     const channel = this.channelPrefix + event
     const _data = JSON.stringify(data)
-    if (event !== 'log')
-      Logger.debug(`发布事件：${channel} <- ${_data}`, RedisSubPub.name)
+    if (event !== 'log') Logger.debug(`发布事件：${channel} <- ${_data}`, RedisSubPub.name)
 
     await this.pubClient.publish(channel, _data)
   }
@@ -44,8 +42,7 @@ export class RedisSubPub {
 
     const cb = (channel, message) => {
       if (channel === myChannel) {
-        if (event !== 'log')
-          Logger.debug(`接收事件：${channel} -> ${message}`, RedisSubPub.name)
+        if (event !== 'log') Logger.debug(`接收事件：${channel} -> ${message}`, RedisSubPub.name)
 
         callback(JSON.parse(message))
       }

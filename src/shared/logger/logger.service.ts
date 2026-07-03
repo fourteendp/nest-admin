@@ -31,7 +31,9 @@ export class LoggerService extends ConsoleLogger {
   }
 
   protected get level(): LogLevel {
-    return this.configService.get('app.logger.level', { infer: true }) as LogLevel
+    return this.configService.get('app.logger.level', {
+      infer: true,
+    }) as LogLevel
   }
 
   protected get maxFiles(): number {
@@ -41,11 +43,7 @@ export class LoggerService extends ConsoleLogger {
   protected initWinston(): void {
     this.winstonLogger = createLogger({
       levels: config.npm.levels,
-      format: format.combine(
-        format.errors({ stack: true }),
-        format.timestamp(),
-        format.json(),
-      ),
+      format: format.combine(format.errors({ stack: true }), format.timestamp(), format.json()),
       transports: [
         new transports.DailyRotateFile({
           level: this.level,

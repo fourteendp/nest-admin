@@ -71,7 +71,7 @@ export class RoleController {
   @Put(':id')
   @ApiOperation({ summary: '更新角色' })
   @Perm(permissions.UPDATE)
-  async update(@IdParam() id: number, @Body(UpdaterPipe)dto: RoleUpdateDto): Promise<void> {
+  async update(@IdParam() id: number, @Body(UpdaterPipe) dto: RoleUpdateDto): Promise<void> {
     await this.roleService.update(id, dto)
     await this.menuService.refreshOnlineUserPerms(false)
     this.sseService.noticeClientToUpdateMenusByRoleIds([id])

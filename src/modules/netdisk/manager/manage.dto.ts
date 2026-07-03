@@ -21,15 +21,12 @@ import { NETDISK_HANDLE_MAX_ITEM } from '~/constants/oss.constant'
 export class IsLegalNameExpression implements ValidatorConstraintInterface {
   validate(value: string, args: ValidationArguments) {
     try {
-      if (isEmpty(value))
-        throw new Error('dir name is empty')
+      if (isEmpty(value)) throw new Error('dir name is empty')
 
-      if (value.includes('/'))
-        throw new Error('dir name not allow /')
+      if (value.includes('/')) throw new Error('dir name not allow /')
 
       return true
-    }
-    catch (e) {
+    } catch (e) {
       return false
     }
   }
@@ -65,7 +62,7 @@ export class GetFileListDto {
 
   @ApiPropertyOptional({ description: '搜索关键字' })
   @Validate(IsLegalNameExpression)
-  @ValidateIf(o => !isEmpty(o.key))
+  @ValidateIf((o) => !isEmpty(o.key))
   @IsString()
   key: string
 }

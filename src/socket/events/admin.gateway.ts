@@ -19,7 +19,8 @@ const AuthGateway = createAuthGateway({ namespace: 'admin' })
 @WebSocketGateway<GatewayMetadata>({ namespace: 'admin' })
 export class AdminEventsGateway
   extends AuthGateway
-  implements OnGatewayConnection, OnGatewayDisconnect {
+  implements OnGatewayConnection, OnGatewayDisconnect
+{
   constructor(
     protected readonly jwtService: JwtService,
     protected readonly authService: AuthService,

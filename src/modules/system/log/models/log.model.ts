@@ -19,7 +19,10 @@ export class LoginLogInfo {
   @ApiProperty({ description: '登录用户名', example: 'admin' })
   username: string
 
-  @ApiProperty({ description: '登录时间', example: '2023-12-22 16:46:20.333843' })
+  @ApiProperty({
+    description: '登录时间',
+    example: '2023-12-22 16:46:20.333843',
+  })
   time: string
 }
 
