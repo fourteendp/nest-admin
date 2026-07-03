@@ -1,17 +1,25 @@
 import {
   BaseEntity,
+  BeforeInsert,
   Column,
   CreateDateColumn,
   Entity,
   JoinColumn,
   OneToOne,
+  PrimaryColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm'
 
 import { AccessTokenEntity } from './access-token.entity'
+import { generateUUID } from '~/utils'
 
 @Entity('user_refresh_tokens')
 export class RefreshTokenEntity extends BaseEntity {
+  @BeforeInsert()
+  beforeInsert() {
+    this.id = generateUUID()
+  }
+
   @PrimaryGeneratedColumn('uuid')
   id!: string
 

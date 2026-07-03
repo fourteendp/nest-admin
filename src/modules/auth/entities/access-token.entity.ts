@@ -1,5 +1,6 @@
 import {
   BaseEntity,
+  BeforeInsert,
   Column,
   CreateDateColumn,
   Entity,
@@ -12,9 +13,15 @@ import {
 import { UserEntity } from '~/modules/user/user.entity'
 
 import { RefreshTokenEntity } from './refresh-token.entity'
+import { generateUUID } from '~/utils'
 
 @Entity('user_access_tokens')
 export class AccessTokenEntity extends BaseEntity {
+  @BeforeInsert()
+  beforeInsert() {
+    this.id = generateUUID()
+  }
+
   @PrimaryGeneratedColumn('uuid')
   id!: string
 
